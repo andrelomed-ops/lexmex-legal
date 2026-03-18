@@ -1,0 +1,49 @@
+{
+  "name": "LexMex - Asesor Legal Inteligente",
+  "short_name": "LexMex",
+  "description": "Tu bufete de abogados virtual - Advisor legal con IA para México",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0D1117",
+  "theme_color": "#C9A227",
+  "categories": ["business", "productivity", "legal"],
+  "lang": "es-MX",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Chat IA",
+      "short_name": "Chat",
+      "description": "Hablar con el asistente legal",
+      "url": "/?tab=chat"
+    },
+    {
+      "name": "Casos",
+      "short_name": "Casos",
+      "description": "Ver mis casos",
+      "url": "/?tab=casos"
+    },
+    {
+      "name": "Citas",
+      "short_name": "Citas",
+      "description": "Ver citas programadas",
+      "url": "/?tab=citas"
+    }
+  ]
+}

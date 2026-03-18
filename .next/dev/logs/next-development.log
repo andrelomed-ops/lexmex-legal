@@ -1,0 +1,3 @@
+[06:07:40.186] Server  LOG     ✓ Compiled in 190ms
+[06:52:43.695] Server  ERROR   ⨯ Error: ENOENT: no such file or directory, open 'E:\PROYECTOS OPEN CODE PRUEBA\.next\dev\server\app\api\chat\[__metadata_id__]\route\app-paths-manifest.json'
+[06:52:46.719] Server  LOG     ○ Compiling /_error ...

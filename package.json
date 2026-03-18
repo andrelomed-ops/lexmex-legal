@@ -1,0 +1,26 @@
+{
+  "name": "lexmex",
+  "version": "1.0.0",
+  "description": "Asesor Legal Inteligente - Derecho Mexicano",
+  "scripts": {
+    "dev": "next dev -p 3456",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "docx": "^9.6.0",
+    "file-saver": "^2.0.5",
+    "jspdf": "^4.2.0",
+    "mammoth": "^1.11.0",
+    "next": "^16.1.6",
+    "pdf-parse": "^2.4.5",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "@types/react": "^19.2.14",
+    "typescript": "^5.9.3"
+  }
+}

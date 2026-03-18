@@ -1,0 +1,110 @@
+{
+  "dataset": [
+    {
+      "contexto": "Despido injustificado",
+      "pregunta": "Me despidieron sin justificación qué puedo hacer?",
+      "respuesta_correcta": "Tienes derecho a demandar por despido injustificado. El artículo 195 de la LFT establece que el patrón debe pagar indemnizaciones. Demanda en la JFCA o Tribunal Laboral. Te corresponde: 90 días de salario, prima de antigüedad, y salarios caídos. Ganas."
+    },
+    {
+      "contexto": "Incumplimiento de contrato",
+      "pregunta": "Mi vecino me debe dinero y no me paga",
+      "respuesta_correcta": "Puedes demandar por incumplimiento de contrato. El artículo 1276 del CCF establece que hay obligación de cumplir lo pactado. Emite requerimiento notarial o demanda civil en tribunales competentes."
+    },
+    {
+      "contexto": "Divorcio",
+      "pregunta": "Quiero divorciarme de mi esposa",
+      "respuesta_correcta": "El divorcio necesario procede por causa justificada (artículo 266 CCF). Puedes elegir entre: 1) Divorcio voluntary (ambos acuerdo); 2) Divorcio necesario (causa justificada). Requisitos: hijos menores, bienes, acordo de pension."
+    },
+    {
+      "contexto": "Liquidación laboral",
+      "pregunta": "Mi patrón no me paga mi liquidación",
+      "respuesta_correcta": "Demanda laboral por incumplimiento de obligaciones patronales. El artículo 132 fracc III de la LFT obliga al patrón a pagar puntualmente. Puedes presentar queja ante PROFEDET o demanda en Tribunal Laboral. Tienes 2 años para reclamar."
+    },
+    {
+      "contexto": "Robo",
+      "pregunta": "Me robaron mi coche qué hago?",
+      "respuesta_correcta": "Presenta denuncia penal por robo ante el Ministerio Público. El artículo 223 del CPF establece el delito. Solicita inmediata orden de localización y aseguramiento. También haz el siniestro con tu aseguradora si tienes cobertura."
+    },
+    {
+      "contexto": "Desalojo",
+      "pregunta": "Mi arrendador me quiere echar",
+      "respuesta_correcta": "El arrendador NO puede echarte sin orden judicial. El artículo 2459 del CCF establece el procedimiento de lanzamiento. Si te quieres ir, exige el depósito de garantía y el estado de cuenta. Si te quedas, puedes oponerte y el juicio puede durar meses."
+    },
+    {
+      "contexto": "Pensión alimenticia",
+      "pregunta": "Quiero demandar a mi ex por pensión alimenticia",
+      "respuesta_correcta": "Demanda alimentos en favor de los hijos. El artículo 303 del CCF establece la obligación de alimentar. El porcentaje depende de tus ingresos y las necesidades del menor. Puedes pedir aumento si tus ingresos aumentan o las necesidades del hijo crecen."
+    },
+    {
+      "contexto": "Accidente laboral",
+      "pregunta": "Me accidente en el trabajo",
+      "respuesta_correcta": "Es riesgo de trabajo. El patrón debe darte atención médica y pago de incapacidad. El artículo 487 de la LFT lo establece. Si el patrón se niega, presenta queja ante el seguro social. Puedes recibir indemnizaciones si queda secuela."
+    },
+    {
+      "contexto": "Sucesión hereditaria",
+      "pregunta": "Mi papá murió y no留下了 testamento",
+      "respuesta_correcta": "Procede sucesión intestamentaria. Acude al notario con: acta de defunción, actas de nacimiento de herederos, identificación. Los herederos legales son: cónyuge, hijos, padres. Si hay menores, se designa tutor. El trámite dura 3-6 meses."
+    },
+    {
+      "contexto": "Demanda civil",
+      "pregunta": "Me llegó una demanda",
+      "respuesta_correcta": "Tienes 20 días para contestarla (código Adjetivo). Designa abogado. Prepara tus pruebas. Si no contestas, te pueden declarar rebeldía y perder por default. Asiste a todas las audiencias."
+    },
+    {
+      "contexto": "Seguro",
+      "pregunta": "El seguro no quiere pagar",
+      "respuesta_correcta": "Presenta reclamación formal por escrito. La aseguradora tiene 30 días para responder (artículo 36 Ley de Seguros). Si niega, puedes demandarla en tribunales civiles. Exige justificar denegación."
+    },
+    {
+      "contexto": "Arrendamiento - contrato",
+      "pregunta": "Dame un contrato de arrendamiento",
+      "respuesta_correcta": "Para generar tu contrato necesito: 1) Nombre arrendador, 2) Nombre arrendatario, 3) Dirección inmueble, 4) Renta mensual, 5) Fecha inicio, 6) Duración. Proporciona estos datos."
+    },
+    {
+      "contexto": "Arrendamiento - datos",
+      "pregunta": "1. Juan Pérez 2. María López 3. Calle Principal 123 4. $10,000 5. 1 enero 2026 6. 1 año",
+      "respuesta_correcta": "CONTRATO DE ARRENDAMIENTO - En la ciudad de [CIUDAD] - PRIMERA. OBJETO: El Arrendador otorga en arrendamiento el inmueble ubicado en Calle Principal 123... [generar contrato completo]"
+    },
+    {
+      "contexto": "Artículo específico",
+      "pregunta": "Qué dice el artículo 162 de la LFT?",
+      "respuesta_correcta": "El artículo 162 de la LFT establece los requisitos para la suspensión temporal de las relaciones de trabajo: I. La incapacidad física o mental del trabajador; II. La prisión preventiva seguida de sentencia absolutoria; III. El arresto del trabajador; IV. Falta de documentos necesarios."
+    },
+    {
+      "contexto": "Divorcio Estado",
+      "pregunta": "Cómo funciona el divorcio en el Estado de México?",
+      "respuesta_correcta": "El divorcio en el EdoMex se rige por el CCEM. Existen dos tipos: 1) Voluntario (ambos acuerdo, sin causa); 2) Necesario (requiere causal legal como adulterio, violencia). Plazo: voluntario 1-3 meses, necesario 6 meses a 2 años."
+    },
+    {
+      "contexto": " PROFECO",
+      "pregunta": "Requisitos para un contrato según PROFECO?",
+      "respuesta_correcta": "Según PROFECO: 1) Datos de las partes (nombre, RFC, domicilio); 2) Descripción del inmueble; 3) Monto de renta; 4) Duración y renovación; 5) Depósito de garantía; 6) Mantenimiento; 7) Terminación; 8) Datos de contacto PROFECO."
+    },
+    {
+      "contexto": "Pensión alimenticia - cálculo",
+      "pregunta": "Cómo se calcula la pensión alimenticia?",
+      "respuesta_correcta": "La pensión alimenticia se calcula según el artículo 303 del CCF: porcentaje del ingreso del obligado según las necesidades del alimentista. Para hijos: puede ser 15-30% del salario. Incluye: comida, vivienda, educación, gastos médicos, transporte."
+    },
+    {
+      "contexto": "Liquidación - cálculo",
+      "pregunta": "Cuánto me corresponde de liquidación?",
+      "respuesta_correcta": "Por despido injustificado te corresponde: 1) 3 meses de salario como indemnización; 2) Prima de antigüedad (12 días por año trabajado, hasta 2 salarios mínimos); 3) Salarios caídos desde el despido hasta la sentencia; 4) Vacaciones y prima vacacional no pagadas."
+    },
+    {
+      "contexto": "Prescripción",
+      "pregunta": "Cuál es el plazo de prescripción para demandar?",
+      "respuesta_correcta": "Depende del caso: Laboral 2 años, Civil 10 años (acciones personales), Penal según el delito, Fiscal 5 años, Arrendaticias 3 años. El plazo se cuenta desde que se conoce el derecho y puede interrumpirse."
+    },
+    {
+      "contexto": "Constitución empresa",
+      "pregunta": "Cómo constituyo una empresa?",
+      "respuesta_correcta": "Acude a un notario o usa el sistema en línea del RFC. Para SA o SRL necesitas: acta constitutiva, RFC, CURP de socios, comprobante de domicilio. Costo varía según capital y notario."
+    }
+  ],
+  "metadatos": {
+    "version": "1.0",
+    "fecha_creacion": "2026-02-25",
+    "total_ejemplos": 20,
+    "notas": "Dataset para fine-tuning de LexMex. Incluye ejemplos de conversaciones ideales con la IA."
+  }
+}

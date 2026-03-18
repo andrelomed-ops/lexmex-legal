@@ -1,0 +1,16 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/analyze/route": "/api/analyze",
+  "/api/chat/route": "/api/chat",
+  "/api/contratos/route": "/api/contratos",
+  "/api/extract/route": "/api/extract",
+  "/api/ocr/route": "/api/ocr",
+  "/api/pdf/route": "/api/pdf",
+  "/api/process-file/route": "/api/process-file",
+  "/api/recursos/route": "/api/recursos",
+  "/api/registry/route": "/api/registry",
+  "/api/search/route": "/api/search",
+  "/api/word/route": "/api/word",
+  "/page": "/"
+}
