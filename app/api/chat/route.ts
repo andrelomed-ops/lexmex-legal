@@ -23,8 +23,13 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const messageText = formData.get('text') as string;
     
-    const parsedMessages = JSON.parse(formData.get('messages') as string || '[]');
+    const rawMessages = formData.get('messages') as string;
+    const parsedMessages = rawMessages ? JSON.parse(rawMessages) : [];
     
+    if (!Array.isArray(parsedMessages)) {
+      return NextResponse.json({ error: 'Formato de mensajes inválido' }, { status: 400 });
+    }
+
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT },
       ...parsedMessages
@@ -63,8 +68,9 @@ export async function POST(req: NextRequest) {
 
   } catch (error) {
     console.error('Error en el chat:', error);
+    const message = error instanceof Error ? error.message : 'Error desconocido';
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
+      { error: `Error interno: ${message}` },
       { status: 500 }
     );
   }
