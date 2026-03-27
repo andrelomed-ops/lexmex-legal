@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 import { jurisprudencias, buscarJurisprudencia } from '@/data/leyes';
 import { plazosLegales } from '@/data/plazos';
 
