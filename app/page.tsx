@@ -11,24 +11,7 @@ interface Message {
   content: string;
 }
 
-const capabilities = [
-  { icon: "📋", title: "Análisis de Demandas", desc: "Analiza documentos y encuentra puntos débiles" },
-  { icon: "✍️", title: "Contestación de Demandas", desc: "Redacta respuestas profesionales" },
-  { icon: "⚖️", title: "Estudio de Fallos", desc: "Encuentra errores en resoluciones" },
-  { icon: "📚", title: "Búsqueda de Jurisprudencia", desc: "Encuentra precedentes relevantes" },
-  { icon: "🔍", title: "Revisión Notarial", desc: "Revisa proyectos y encuentra inconsistencias" },
-  { icon: "📜", title: "Contratos Civiles", desc: "Redacta cualquier contrato civil" },
-  { icon: "💼", title: "Contratos Mercantiles", desc: "Redacta contratos comerciales" },
-  { icon: "⏱️", title: "Plazos Legales", desc: "Calcula prescripción y términos procesales" },
-  { icon: "✅", title: "Due Diligence", desc: "Verifica propiedades, empresas, personas" },
-  { icon: "📖", title: "Glosario Legal", desc: "Definiciones de términos jurídicos" },
-  { icon: "📋", title: "Guías Procedimentales", desc: "Pasos para juicios y trámites" },
-  { icon: "🏛️", title: "Demandas", desc: "Redacta demandas y escritos jurídicos" },
-  { icon: "💰", title: "Calculadora Laboral", desc: "Liquidación por despido injustificado" },
-  { icon: "💵", title: "Pensión Alimenticia", desc: "Calcula estimación de pensión" },
-  { icon: "🏦", title: "ISR e Impuestos", desc: "Estimación de impuestos" },
-  { icon: "⚖️", title: "Daños y Perjuicios", desc: "Calcula indemnización civil" }
-];
+
 
 import PlantillasView from '@/components/PlantillasView';
 import ProspectosView from '@/components/ProspectosView';
@@ -46,20 +29,18 @@ import { EscriturasView } from '@/components/EscriturasView';
 
 
 
-const notaryCapabilities = [
-  { icon: "🔍", title: "Revisión de Proyectos", desc: "Encuentra inconsistencias en escrituras" },
-  { icon: "✅", title: "Due Diligence Comprador", desc: "Verifica propiedad, gravámenes, riesgos" },
-  { icon: "👤", title: "Due Diligence Vendedor", desc: "Verifica capacidad y origen de recursos" },
-  { icon: "✍️", title: "Redactar Escritura", desc: "Crea escritura pública completa" }
-];
+
 
 export default function Home() {
   useEffect(() => {
+    // Service Worker disabled for debugging
+    /*
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
         .then((reg) => console.log('SW registered:', reg.scope))
         .catch((err) => console.log('SW registration failed:', err));
     }
+    */
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
     }
@@ -120,7 +101,7 @@ export default function Home() {
       reportes: "Reportes",
       plantillas: "Plantillas",
       escrituras: "Escrituras",
-      library: "Leyes",
+      library: "Biblioteca Legal",
       jurisprudencia: "Jurisprudencia",
       newClient: "Nuevo Cliente",
       newCase: "Nuevo Caso",
@@ -1122,963 +1103,434 @@ How can I help you today?`;
   // Always show app (auth disabled)
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', paddingBottom: isMobile ? '90px' : '0' }}>
-      <header className="glass" style={{
-        borderBottom: '1px solid var(--border)',
-        padding: isMobile ? '14px 16px' : '16px 24px',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
+    <div style={{ 
+      minHeight: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      background: 'var(--bg)', 
+      color: 'var(--text)',
+      overflow: 'hidden'
+    }}>
+      {/* Premium Desktop Atmosphere */}
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        background: `
+          radial-gradient(circle at 0% 0%, rgba(30, 58, 95, 0.3) 0%, transparent 40%),
+          radial-gradient(circle at 100% 100%, rgba(201, 162, 39, 0.1) 0%, transparent 40%),
+          radial-gradient(ellipse at top right, rgba(201, 162, 39, 0.05) 0%, transparent 50%)
+        `,
+        zIndex: 0
+      }} />
+
+      {/* Top Navigation Bar - Fidelity Edition */}
+      <header style={{
+        height: '70px',
+        padding: '0 32px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        zIndex: 10,
+        background: 'rgba(10, 13, 20, 0.8)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '12px' : '16px' }}>
-            {isMobile && (
-              <button onClick={() => setShowMobileMenu(!showMobileMenu)} style={{ padding: '10px', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '12px', cursor: 'pointer', fontSize: '18px' }}>
-                ☰
-              </button>
-            )}
-            <div style={{
-              width: isMobile ? '42px' : '50px',
-              height: isMobile ? '42px' : '50px',
-              background: 'linear-gradient(135deg, var(--secondary) 0%, #E8C547 100%)',
-              borderRadius: '14px',
+        {/* Left: Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontSize: '24px' }}>⚖️</span>
+          <h1 style={{ 
+            fontSize: '22px', 
+            fontWeight: 700, 
+            margin: 0, 
+            fontFamily: 'Playfair Display', 
+            color: '#ffffff',
+            letterSpacing: '0.5px'
+          }}>LexMex</h1>
+        </div>
+
+        {/* Center: Pill Search */}
+        <div className="pill-search">
+          <span style={{ fontSize: '16px', opacity: 0.6 }}>🔍</span>
+          <input 
+            type="text" 
+            placeholder="Buscar en LexMex..." 
+            onClick={() => setShowSearch(true)}
+            readOnly
+          />
+        </div>
+
+        {/* Right: Profile & Notifications */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <button className="icon-button-gold" style={{ fontSize: '20px' }}>🔔</button>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px',
+            cursor: 'pointer'
+          }}>
+            <div style={{ textAlign: 'right' }}>
+               <p style={{ margin: 0, fontSize: '13px', fontWeight: 600 }}>Abg. Elena Ruiz</p>
+               <p style={{ margin: 0, fontSize: '10px', color: 'var(--text-muted)' }}>Perfil Pro ⌵</p>
+            </div>
+            <div style={{ 
+              width: '36px', 
+              height: '36px', 
+              borderRadius: '50%', 
+              background: 'var(--surface-opaque)',
+              border: '1.5px solid var(--primary)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: isMobile ? '22px' : '24px',
-              boxShadow: '0 4px 20px rgba(201, 162, 39, 0.4)'
-            }}>
-              ⚖️
-            </div>
-            <div>
-              <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontFamily: 'Playfair Display, serif', color: 'var(--secondary)', letterSpacing: '-0.5px', cursor: 'pointer' }} onClick={() => setShowSearch(!showSearch)}>LexMex</h1>
-              {!isMobile && <p style={{ fontSize: '12px', color: 'var(--muted)', letterSpacing: '1px' }}>Asesor Legal Inteligente</p>}
-            </div>
+              fontSize: '18px',
+              overflow: 'hidden'
+            }}>👤</div>
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button onClick={() => setLanguage(language === 'es' ? 'en' : 'es')} title="Cambiar idioma" style={{ padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', color: 'var(--text)' }}>
-              {language === 'es' ? '🇪🇸' : '🇺🇸'}
-            </button>
-            <button onClick={toggleTheme} title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'} style={{ padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', fontSize: '16px' }}>
-              {theme === 'dark' ? '☀️' : '🌙'}
-            </button>
-            <button onClick={loadSampleData} title="Cargar datos de ejemplo" style={{ padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', color: 'var(--text)' }}>
-              📊 Demo
-            </button>
-            <button onClick={() => setShowEmailModal(true)} title="Enviar email" style={{ padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', color: 'var(--text)' }}>
-              📧 Email
-            </button>
-            <button onClick={() => setShowCallModal(true)} title="Llamada de voz" style={{ padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', color: 'var(--text)' }}>
-              📞
-            </button>
-            <button onClick={logout} title="Cerrar sesión" style={{ padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', color: 'var(--text)' }}>
-              🚪
-            </button>
-            <div style={{ position: 'relative' }}>
-              <button onClick={() => setShowExportMenu(!showExportMenu)} style={{ padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', color: 'var(--text)' }}>
-                📤 Exportar
-              </button>
-              {showExportMenu && (
-                <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '8px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px', minWidth: '180px', zIndex: 100 }}>
-                  <button onClick={() => exportData('clientes')} style={{ width: '100%', padding: '8px 12px', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--text)', fontSize: '13px', borderRadius: '4px' }}>👥 Exportar Clientes</button>
-                  <button onClick={() => exportData('casos')} style={{ width: '100%', padding: '8px 12px', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--text)', fontSize: '13px', borderRadius: '4px' }}>📁 Exportar Casos</button>
-                  <button onClick={() => exportData('prospectos')} style={{ width: '100%', padding: '8px 12px', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--text)', fontSize: '13px', borderRadius: '4px' }}>🤝 Exportar Prospectos</button>
-                  <button onClick={() => exportData('citas')} style={{ width: '100%', padding: '8px 12px', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--text)', fontSize: '13px', borderRadius: '4px' }}>📆 Exportar Citas</button>
-                  <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '8px 0' }} />
-                  <button onClick={() => exportData('all')} style={{ width: '100%', padding: '8px 12px', background: 'var(--secondary)', border: 'none', textAlign: 'left', cursor: 'pointer', color: '#0D1117', fontSize: '13px', borderRadius: '4px', fontWeight: 600 }}>💾 Backup Completo</button>
-                  <label style={{ display: 'block', width: '100%', padding: '8px 12px', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--text)', fontSize: '13px', borderRadius: '4px', marginTop: '4px' }}>
-                    📥 Importar Datos
-                    <input type="file" accept=".json" onChange={importData} style={{ display: 'none' }} />
-                  </label>
-                </div>
-              )}
-            </div>
-          </div>
-          
-          <nav style={{ display: 'flex', gap: isMobile ? '2px' : '4px', background: 'var(--surface)', padding: isMobile ? '4px' : '4px', borderRadius: isMobile ? '8px' : '10px', overflowX: isMobile ? 'auto' : 'visible', justifyContent: isMobile ? 'flex-start' : 'flex-start' }}>
-            {[
-              { id: 'chat', label: language === 'es' ? 'Chat' : 'Chat', icon: '💬' },
-              { id: 'prospectos', label: language === 'es' ? 'Prospectos' : 'Prospects', icon: '🤝' },
-              { id: 'citas', label: language === 'es' ? 'Citas' : 'Appts', icon: '📆' },
-              { id: 'casos', label: language === 'es' ? 'Casos' : 'Cases', icon: '📁' },
-              { id: 'calendario', label: language === 'es' ? 'Calendario' : 'Calendar', icon: '📅' },
-              { id: 'equipo', label: language === 'es' ? 'Equipo' : 'Team', icon: '👥' },
-              { id: 'tratados', label: language === 'es' ? 'Internac.' : 'Intl.', icon: '🌍' },
-              { id: 'reportes', label: language === 'es' ? 'Reportes' : 'Reports', icon: '📊' },
-              { id: 'plantillas', label: language === 'es' ? 'Plantillas' : 'Templates', icon: '📄' },
-              { id: 'escrituras', label: language === 'es' ? 'Escrituras' : 'Deeds', icon: '📝' },
-              { id: 'library', label: language === 'es' ? 'Leyes' : 'Laws', icon: '📜' },
-              { id: 'jurisprudencia', label: language === 'es' ? 'Jurisp.' : 'Cases', icon: '⚖️' }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                style={{
-                  padding: isMobile ? '8px 12px' : '12px 20px',
-                  background: activeTab === tab.id ? 'var(--primary)' : 'transparent',
-                  border: 'none',
-                  borderRadius: '8px',
-                  color: activeTab === tab.id ? 'var(--text)' : 'var(--muted)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  fontSize: isMobile ? '11px' : '14px',
-                  fontWeight: 500,
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                {tab.icon} {tab.label}
-              </button>
-            ))}
-          </nav>
-          {/* Alertas de plazos */}
-          {(getPlazosVencidos().length > 0 || getPlazosProximos().length > 0) && (
-            <div style={{ display: 'flex', gap: '8px', marginLeft: '16px' }}>
-              {getPlazosVencidos().length > 0 && (
-                <div style={{ padding: '6px 12px', background: '#ef4444', borderRadius: '6px', fontSize: '12px', color: '#fff', cursor: 'pointer' }}
-                  onClick={() => setActiveTab('casos')}>
-                  ⚠️ {getPlazosVencidos().length} plazo(s) vencido(s)
-                </div>
-              )}
-              {getPlazosProximos().length > 0 && (
-                <div style={{ padding: '6px 12px', background: '#f59e0b', borderRadius: '6px', fontSize: '12px', color: '#fff', cursor: 'pointer' }}
-                  onClick={() => setActiveTab('casos')}>
-                  ⏰ {getPlazosProximos().length} plazo(s) próximo(s)
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </header>
 
-      {/* Global Search Modal */}
-      {showSearch && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: '100px', zIndex: 2000 }}>
-          <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '24px', width: '600px', maxHeight: '70vh', overflowY: 'auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h2 style={{ fontSize: '18px', color: 'var(--secondary)' }}>🔍 Búsqueda Global</h2>
-              <button onClick={() => { setShowSearch(false); setSearchQuery(''); setSearchResults([]); }} style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', fontSize: '20px' }}>✕</button>
+      {/* Workspace Area */}
+      <main style={{ flex: 1, display: 'flex', padding: '24px', gap: '24px', zIndex: 1, overflow: 'hidden' }}>
+        {/* Navigation Sidebar - Fidelity Edition */}
+        <aside className="sidebar-glass" style={{ 
+          width: '260px', 
+          display: isMobile ? 'none' : 'flex', 
+          flexDirection: 'column', 
+          gap: '4px'
+        }}>
+          {[
+            { id: 'chat', label: 'Inicio', icon: '🏠' },
+            { id: 'library', label: 'Biblioteca Legal', icon: '📖', hasChevron: true },
+            { id: 'casos', label: 'Casos', icon: '💼', hasChevron: true },
+            { id: 'investigacion', label: 'Investigación', icon: '🔍' },
+            { id: 'perfil', label: 'Perfil', icon: '👤' }
+          ].map(item => (
+            <div key={item.id}>
+              <button
+                onClick={() => setActiveTab(item.id as any)}
+                className={`nav-item-fidelity ${activeTab === item.id ? 'active' : ''}`}
+                style={{ width: '100%' }}
+              >
+                <span style={{ fontSize: '18px' }}>{item.icon}</span>
+                <span style={{ flex: 1, textAlign: 'left' }}>{item.label}</span>
+                {item.hasChevron && <span style={{ fontSize: '12px', opacity: 0.5 }}>⌵</span>}
+              </button>
+              
+              {/* Mock sub-items if active or special library case */}
+              {item.id === 'library' && activeTab === 'library' && (
+                <div style={{ paddingLeft: '44px', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px', marginBottom: '12px' }}>
+                  <p style={{ fontSize: '13px', color: 'var(--text-muted)', cursor: 'pointer' }}>Contratos</p>
+                  <p style={{ fontSize: '13px', color: 'var(--text-muted)', cursor: 'pointer' }}>Legislación</p>
+                  <p style={{ fontSize: '13px', color: 'var(--text-muted)', cursor: 'pointer' }}>Jurisprudencia</p>
+                </div>
+              )}
             </div>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); performSearch(e.target.value); }}
-              placeholder="Buscar clientes, casos, prospectos..."
-              autoFocus
-              style={{ width: '100%', padding: '14px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '16px', marginBottom: '16px' }}
-            />
-            {searchResults.length > 0 ? (
-              <div>
-                {searchResults.map((r, i) => (
-                  <div key={i} onClick={() => { setShowSearch(false); setSearchQuery(''); setSearchResults([]); if (r.type === 'cliente') { setActiveTab('casos'); } else if (r.type === 'caso') { setActiveTab('casos'); } else if (r.type === 'prospecto') { setActiveTab('prospectos'); } }} style={{ padding: '12px', background: 'var(--bg)', borderRadius: '8px', marginBottom: '8px', cursor: 'pointer' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <span style={{ fontSize: '16px' }}>{r.type === 'cliente' ? '👤' : r.type === 'caso' ? '📁' : '🤝'}</span>
-                      <div>
-                        <p style={{ fontSize: '14px', fontWeight: 600 }}>{r.title}</p>
-                        <p style={{ fontSize: '12px', color: 'var(--muted)' }}>{r.subtitle}</p>
+          ))}
+          
+          <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+             <button onClick={logout} className="nav-item-fidelity" style={{ width: '100%', color: '#ef4444' }}>
+                <span style={{ fontSize: '18px' }}>🚪</span> Cerrar Sesión
+             </button>
+          </div>
+        </aside>
+
+        {/* View Content Area - Fidelity Edition */}
+        <section style={{ flex: 1, display: 'flex', gap: '24px', overflow: 'hidden' }}>
+          {activeTab === 'chat' && (
+            <>
+              {/* Central Chat: Gold Bordered */}
+              <div className="chat-container-gold" style={{ flex: 1 }}>
+                <ChatInterface 
+                  messages={messages}
+                  isLoading={isLoading}
+                  input={input}
+                  setInput={setInput}
+                  sendMessage={sendMessage}
+                  selectedImage={selectedImage}
+                  setSelectedImage={setSelectedImage}
+                  isRecording={isRecording}
+                  toggleVoiceInput={toggleVoiceInput}
+                  useWebSearch={useWebSearch}
+                  setUseWebSearch={setUseWebSearch}
+                  handleOCR={() => document.getElementById('ocr-upload')?.click()}
+                  setShowContractAnalysis={setShowContractAnalysis}
+                  setShowDueDiligence={setShowDueDiligence}
+                  selectedCaso={selectedCaso}
+                  onCloseCaso={() => { setSelectedCaso(null); setSelectedCliente(null); }}
+                  onSelectCasoChat={(caso: any, cliente: any) => { setSelectedCliente(cliente); setSelectedCaso(caso); setActiveTab('casos'); }}
+                  casos={casos}
+                  clientes={clientes}
+                  setActiveTab={setActiveTab}
+                  setSelectedCliente={setSelectedCliente}
+                  setSelectedCaso={setSelectedCaso}
+                  showToast={showToast}
+                  fileInputRef={fileInputRef}
+                  messagesEndRef={messagesEndRef}
+                />
+              </div>
+
+              {/* Right Sidebar: Context Fidelity */}
+              <aside className="sidebar-glass" style={{ width: '300px', display: isMobile ? 'none' : 'flex', flexDirection: 'column' }}>
+                <h2 style={{ fontSize: '18px', marginBottom: '4px', color: '#fff' }}>Caso 001 - Arrendamiento</h2>
+                <div style={{ height: '2px', background: 'var(--primary)', width: '40px', marginBottom: '24px' }}></div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <section>
+                    <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: 600, letterSpacing: '0.05em' }}>DOCUMENTOS GENERADOS</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div className="glass-card" style={{ padding: '12px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <span>📄</span> Contratos Gen... <span style={{ marginLeft: 'auto', opacity: 0.5 }}>⌵</span>
+                      </div>
+                      <div className="glass-card" style={{ padding: '12px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <span>📂</span> Documentos Arrendamiento <span style={{ marginLeft: 'auto', opacity: 0.5 }}>⌵</span>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : searchQuery ? (
-              <p style={{ textAlign: 'center', color: 'var(--muted)', padding: '20px' }}>No se encontraron resultados</p>
-            ) : (
-              <p style={{ textAlign: 'center', color: 'var(--muted)', padding: '20px' }}>Escribe para buscar en clientes, casos y prospectos</p>
-            )}
-          </div>
-        </div>
-      )}
+                  </section>
 
-      <main style={{ flex: 1, maxWidth: '1400px', margin: '0 auto', width: '100%', padding: '24px' }}>
-        
-        {activeTab === 'prospectos' && (
-          <ProspectosView prospectos={prospectos} clientes={clientes} onAdd={addProspecto} onUpdateStatus={updateProspectoStatus} onDelete={deleteProspecto} onConvert={convertirProspecto} onShowNew={() => setShowNewProspecto(true)} />
-        )}
+                  <section>
+                    <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 600, letterSpacing: '0.05em' }}>RESUMEN LEGAL</p>
+                    <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6' }}>
+                      El cliente requiere redactar un contrato de arrendamiento residencial para un cliente. Se necesita asegurar el depósito de garantía y las cláusulas de rescisión por falta de pago.
+                    </p>
+                  </section>
 
-        {activeTab === 'citas' && (
-          <CitasView citas={citas} clientes={clientes} onAdd={addCita} onUpdateStatus={updateCitaStatus} onDelete={deleteCita} onShowNew={() => setShowNewCita(true)} onSyncCalendar={syncToGoogleCalendar} />
-        )}
-
-        {activeTab === 'equipo' && (
-          <EquipoView 
-            teamMembers={teamMembers} 
-            onAddMember={addTeamMember} 
-            onDeleteMember={(id: string) => setConfirmDelete({ id, type: 'teamMember', message: '¿Eliminar a este miembro del equipo?' })}
-            onCallMember={() => setShowCallModal(true)}
-            showNewMember={showNewTeamMember}
-            setShowNewMember={setShowNewTeamMember}
-          />
-        )}
-
-        {activeTab === 'tratados' && (
-          <LegalLibrary 
-            materiaFilter="tratados" 
-            searchTerm="" 
-            language={language} 
-          />
-        )}
-
-        {activeTab === 'chat' && (
-          <ChatInterface 
-            messages={messages}
-            isLoading={isLoading}
-            input={input}
-            setInput={setInput}
-            sendMessage={sendMessage}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-            isRecording={isRecording}
-            toggleVoiceInput={toggleVoiceInput}
-            useWebSearch={useWebSearch}
-            setUseWebSearch={setUseWebSearch}
-            handleOCR={() => document.getElementById('ocr-upload')?.click()}
-            setShowContractAnalysis={setShowContractAnalysis}
-            selectedCaso={selectedCaso}
-            onCloseCaso={() => setSelectedCaso(null)}
-            onSelectCasoChat={(caso: any, cliente: any) => { setSelectedCliente(cliente); setSelectedCaso(caso); setActiveTab('casos'); }}
-            casos={casos}
-            clientes={clientes}
-          />
-        )}
-
-        {activeTab === 'library' && (
-          <LegalLibrary 
-            materiaFilter={materiaFilter} 
-            searchTerm={searchTerm} 
-            language={language}
-          />
-        )}
-
-        {activeTab === 'jurisprudencia' && (
-          <LegalLibrary 
-            materiaFilter="jurisprudencia" 
-            searchTerm={searchTerm} 
-            language={language}
-          />
-        )}
-
-        {activeTab === 'casos' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '24px', height: 'calc(100vh - 160px)' }}>
-            <CasesManager 
-              clientes={clientes}
-              casos={casos}
-              onAddCliente={addCliente}
-              onDeleteCliente={deleteCliente}
-              onSelectCliente={(cliente) => { setSelectedCliente(cliente); setSelectedCaso(null); }}
-              selectedCliente={selectedCliente}
-              onSelectCaso={setSelectedCaso}
-              showNewCliente={showNewCliente}
-              setShowNewCliente={setShowNewCliente}
-              getCasosByCliente={getCasosByCliente}
-            />
-            <CaseDetail
-              selectedCliente={selectedCliente}
-              selectedCaso={selectedCaso}
-              casosDelCliente={selectedCliente ? getCasosByCliente(selectedCliente.id) : []}
-              onSelectCaso={setSelectedCaso}
-              onAddCaso={addCaso}
-              onDeleteCaso={deleteCaso}
-              showNewCaso={showNewCaso}
-              setShowNewCaso={setShowNewCaso}
-              onAddPlazo={addPlazo}
-              onTogglePlazo={togglePlazo}
-              onDeletePlazo={deletePlazo}
-              showNewPlazo={showNewPlazo}
-              setShowNewPlazo={setShowNewPlazo}
-              onAddEvento={addEvento}
-              onDeleteEvento={deleteEvento}
-              showNewEvento={showNewEvento}
-              setShowNewEvento={setShowNewEvento}
-              onAddDocumento={addDocumento}
-              onDeleteDocumento={deleteDocumento}
-              showNewDocumento={showNewDocumento}
-              setShowNewDocumento={setShowNewDocumento}
-              onAddConsulta={addConsulta}
-              showNewConsulta={showNewConsulta}
-              setShowNewConsulta={setShowNewConsulta}
-              onAddFactura={addFactura}
-              onUpdateFacturaStatus={updateFacturaStatus}
-              onDeleteFactura={deleteFactura}
-              showNewFactura={showNewFactura}
-              setShowNewFactura={setShowNewFactura}
-              onShowEmail={() => setShowEmailModal(true)}
-              onShowCall={() => setShowCallModal(true)}
-            />
-          </div>
-        )}
-
-        {activeTab === 'plantillas' && (
-          <PlantillasView />
-        )}
-
-        {activeTab === 'calendario' && (
-          <CalendarioView casos={casos} />
-        )}
-
-        {activeTab === 'reportes' && (
-          <ReportesView casos={casos} clientes={clientes} />
-        )}
-
-        {activeTab === 'escrituras' && (
-          <EscriturasView 
-            onRedactar={(prompt: string) => { setInput(prompt); setActiveTab('chat'); }}
-            materiaFilter={materiaFilter}
-            setMateriaFilter={setMateriaFilter}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-          />
-        )}
-
-        {/* Modal Nuevo Prospecto */}
-        {showNewProspecto && (
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-            <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '24px', width: '450px', maxHeight: '80vh', overflowY: 'auto' }}>
-              <h2 style={{ fontSize: '20px', marginBottom: '20px', color: 'var(--secondary)' }}>🤝 Nuevo Prospecto</h2>
-              <form onSubmit={(e) => { addProspecto(e); setShowNewProspecto(false); }}>
-                <input name="nombre" placeholder="Nombre completo" required style={{ width: '100%', padding: '12px', marginBottom: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }} />
-                <input name="correo" placeholder="Correo electrónico" type="email" style={{ width: '100%', padding: '12px', marginBottom: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }} />
-                <input name="telefono" placeholder="Teléfono" style={{ width: '100%', padding: '12px', marginBottom: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }} />
-                <input name="motivo" placeholder="Motivo de consulta" style={{ width: '100%', padding: '12px', marginBottom: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }} />
-                <select name="fuente" required style={{ width: '100%', padding: '12px', marginBottom: '16px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}>
-                  <option value="">Selecciona fuente</option>
-                  <option value="referencia">Referencia</option>
-                  <option value="google">Google</option>
-                  <option value="facebook">Facebook</option>
-                  <option value="instagram">Instagram</option>
-                  <option value="linkedin">LinkedIn</option>
-                  <option value="otro">Otro</option>
-                </select>
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button type="submit" style={{ flex: 1, padding: '12px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Guardar</button>
-                  <button type="button" onClick={() => setShowNewProspecto(false)} style={{ flex: 1, padding: '12px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer' }}>Cancelar</button>
+                  <section>
+                    <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: 600, letterSpacing: '0.05em' }}>SIGUIENTES PASOS</p>
+                    <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>1.</span> Completar datos arrendador.
+                      </div>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>2.</span> Validar ID oficial.
+                      </div>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>3.</span> Enviar a firma digital.
+                      </div>
+                    </div>
+                  </section>
                 </div>
-              </form>
-            </div>
-          </div>
-        )}
+              </aside>
+            </>
+          )}
 
-        {/* Modal Nueva Cita */}
-        {showNewCita && (
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-            <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '24px', width: '450px', maxHeight: '80vh', overflowY: 'auto' }}>
-              <h2 style={{ fontSize: '20px', marginBottom: '20px', color: 'var(--secondary)' }}>📆 Nueva Cita</h2>
-              <form onSubmit={(e) => { addCita(e); setShowNewCita(false); }}>
-                <select name="clienteId" required style={{ width: '100%', padding: '12px', marginBottom: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}>
-                  <option value="">Selecciona cliente</option>
-                  {clientes.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
-                </select>
-                <input name="titulo" placeholder="Título de la cita" required style={{ width: '100%', padding: '12px', marginBottom: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }} />
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
-                  <input name="fecha" type="date" required style={{ padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }} />
-                  <input name="hora" type="time" required style={{ padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }} />
-                </div>
-                <select name="tipo" required style={{ width: '100%', padding: '12px', marginBottom: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}>
-                  <option value="consulta">Consulta</option>
-                  <option value="seguimiento">Seguimiento</option>
-                  <option value="audiencia">Audiencia</option>
-                  <option value="otra">Otra</option>
-                </select>
-                <textarea name="notas" placeholder="Notas adicionales" rows={3} style={{ width: '100%', padding: '12px', marginBottom: '16px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }} />
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button type="submit" style={{ flex: 1, padding: '12px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Guardar</button>
-                  <button type="button" onClick={() => setShowNewCita(false)} style={{ flex: 1, padding: '12px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer' }}>Cancelar</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+          {activeTab !== 'chat' && (
+            <div className="glass-panel scale-up" style={{ flex: 1, overflowY: 'auto', padding: '32px' }}>
+               {activeTab === 'casos' && (
+                 <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '350px 1fr', gap: '32px', height: '100%' }}>
+                   <CasesManager 
+                     clientes={clientes}
+                     casos={casos}
+                     onAddCliente={addCliente}
+                     onDeleteCliente={deleteCliente}
+                     onSelectCliente={(cliente) => { setSelectedCliente(cliente); setSelectedCaso(null); }}
+                     selectedCliente={selectedCliente}
+                     onSelectCaso={setSelectedCaso}
+                     showNewCliente={showNewCliente}
+                     setShowNewCliente={setShowNewCliente}
+                     getCasosByCliente={getCasosByCliente}
+                   />
+                   <CaseDetail
+                     selectedCliente={selectedCliente}
+                     selectedCaso={selectedCaso}
+                     casosDelCliente={selectedCliente ? getCasosByCliente(selectedCliente.id) : []}
+                     onSelectCaso={setSelectedCaso}
+                     onAddCaso={addCaso}
+                     onDeleteCaso={deleteCaso}
+                     showNewCaso={showNewCaso}
+                     setShowNewCaso={setShowNewCaso}
+                     onAddPlazo={addPlazo}
+                     onTogglePlazo={togglePlazo}
+                     onDeletePlazo={deletePlazo}
+                     showNewPlazo={showNewPlazo}
+                     setShowNewPlazo={setShowNewPlazo}
+                     onAddEvento={addEvento}
+                     onDeleteEvento={deleteEvento}
+                     showNewEvento={showNewEvento}
+                     setShowNewEvento={setShowNewEvento}
+                     onAddDocumento={addDocumento}
+                     onDeleteDocumento={deleteDocumento}
+                     showNewDocumento={showNewDocumento}
+                     setShowNewDocumento={setShowNewDocumento}
+                     onAddConsulta={addConsulta}
+                     showNewConsulta={showNewConsulta}
+                     setShowNewConsulta={setShowNewConsulta}
+                     onAddFactura={addFactura}
+                     onUpdateFacturaStatus={updateFacturaStatus}
+                     onDeleteFactura={deleteFactura}
+                     showNewFactura={showNewFactura}
+                     setShowNewFactura={setShowNewFactura}
+                     onShowEmail={(email: string) => { setEmailTo(email); setShowEmailModal(true); }}
+                     onShowCall={() => setShowCallModal(true)}
+                   />
+                 </div>
+               )}
 
-        {/* Modal Enviar Email */}
-        {showEmailModal && (
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 }}>
-            <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '24px', width: '500px' }}>
-              <h2 style={{ fontSize: '20px', marginBottom: '20px', color: 'var(--secondary)' }}>📧 Enviar Email</h2>
-              <input
-                type="email"
-                value={emailTo}
-                onChange={(e) => setEmailTo(e.target.value)}
-                placeholder="Para: correo@ejemplo.com"
-                style={{ width: '100%', padding: '12px', marginBottom: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
-              />
-              <input
-                type="text"
-                value={emailSubject}
-                onChange={(e) => setEmailSubject(e.target.value)}
-                placeholder="Asunto"
-                style={{ width: '100%', padding: '12px', marginBottom: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
-              />
-              <textarea
-                value={emailBody}
-                onChange={(e) => setEmailBody(e.target.value)}
-                placeholder="Mensaje..."
-                rows={6}
-                style={{ width: '100%', padding: '12px', marginBottom: '16px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', resize: 'vertical' }}
-              />
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <button onClick={sendEmail} style={{ flex: 1, padding: '12px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>📤 Enviar</button>
-                <button onClick={() => setShowEmailModal(false)} style={{ flex: 1, padding: '12px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer' }}>Cancelar</button>
-              </div>
+               {activeTab === 'library' && (
+                 <LegalLibrary materiaFilter={materiaFilter} setMateriaFilter={setMateriaFilter} searchTerm={searchTerm} setSearchTerm={setSearchTerm} language={language} filteredLeyes={[]} filteredJurisprudencias={[]} activeSubTab="leyes" setActiveSubTab={() => {}} />
+               )}
+
+               {activeTab === 'prospectos' && (
+                 <ProspectosView prospectos={prospectos} clientes={clientes} onAdd={addProspecto} onUpdateStatus={updateProspectoStatus} onDelete={deleteProspecto} onConvert={convertirProspecto} onShowNew={() => setShowNewProspecto(true)} />
+               )}
+
+               {activeTab === 'reportes' && (
+                 <ReportesView casos={casos} clientes={clientes} />
+               )}
+
+               {activeTab === 'equipo' && (
+                 <EquipoView 
+                   teamMembers={teamMembers} 
+                   onAddMember={addTeamMember} 
+                   onDeleteMember={(id: string) => setConfirmDelete({ id, type: 'teamMember', message: '¿Eliminar a este miembro del equipo?' })}
+                   onCallMember={() => setShowCallModal(true)}
+                   showNewMember={showNewTeamMember}
+                   setShowNewMember={setShowNewTeamMember}
+                 />
+               )}
             </div>
-          </div>
-        )}
+          )}
+        </section>
       </main>
 
-      {/* Due Diligence Modal */}
-      {showDueDiligence && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 3000, padding: '20px' }}>
-          <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '24px', width: '100%', maxWidth: '600px', maxHeight: '90vh', overflow: 'auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '20px', color: 'var(--secondary)' }}>✅ Due Diligence - Verificación</h2>
-              <button onClick={() => { setShowDueDiligence(false); setDueDiligenceResult(null); }} style={{ background: 'none', border: 'none', color: 'var(--text)', fontSize: '24px', cursor: 'pointer' }}>×</button>
-            </div>
-
-            {!dueDiligenceResult ? (
-              <>
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', fontSize: '14px', marginBottom: '8px', color: 'var(--text)' }}>Tipo de verificación:</label>
-                  <select value={ddForm.tipo} onChange={(e) => setDdForm({ ...ddForm, tipo: e.target.value })} style={{ width: '100%', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}>
-                    <option value="persona-moral">Persona Moral (Empresa)</option>
-                    <option value="persona-fisica">Persona Física</option>
-                    <option value="propiedad">Propiedad Inmueble</option>
-                  </select>
-                </div>
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', fontSize: '14px', marginBottom: '8px', color: 'var(--text)' }}>RFC:</label>
-                  <input value={ddForm.rfc} onChange={(e) => setDdForm({ ...ddForm, rfc: e.target.value })} placeholder="AAAA000000XXX" style={{ width: '100%', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', textTransform: 'uppercase' }} />
-                </div>
-                {ddForm.tipo === 'persona-fisica' && (
-                  <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', marginBottom: '8px', color: 'var(--text)' }}>CURP (opcional):</label>
-                    <input value={ddForm.curp} onChange={(e) => setDdForm({ ...ddForm, curp: e.target.value })} placeholder="AAAA000000HDFXXX00" style={{ width: '100%', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', textTransform: 'uppercase' }} />
-                  </div>
-                )}
-                <div style={{ marginBottom: '20px' }}>
-                  <label style={{ display: 'block', fontSize: '14px', marginBottom: '8px', color: 'var(--text)' }}>{ddForm.tipo === 'propiedad' ? 'Dirección de la propiedad:' : 'Nombre / Razón Social:'}</label>
-                  <input value={ddForm.nombre} onChange={(e) => setDdForm({ ...ddForm, nombre: e.target.value })} placeholder={ddForm.tipo === 'propiedad' ? 'Dirección completa' : 'Nombre o razón social'} style={{ width: '100%', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }} />
-                </div>
-                <button onClick={async () => {
-                  if (!ddForm.rfc || !ddForm.nombre) {
-                    showToast('Completa los campos requeridos', 'error');
-                    return;
-                  }
-                  setIsCheckingDD(true);
-                  try {
-                    const res = await fetch('/api/registry', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ type: 'due-diligence', rfc: ddForm.rfc, curp: ddForm.curp, nombre: ddForm.nombre })
-                    });
-                    const data = await res.json();
-                    setDueDiligenceResult(data);
-                  } catch (err) {
-                    showToast('Error al realizar verificación', 'error');
-                  } finally {
-                    setIsCheckingDD(false);
-                  }
-                }} disabled={isCheckingDD} style={{ width: '100%', padding: '14px', background: isCheckingDD ? 'var(--muted)' : 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: isCheckingDD ? 'not-allowed' : 'pointer', fontSize: '16px', fontWeight: 600 }}>
-                  {isCheckingDD ? 'Verificando...' : '🔍 Realizar Verificación'}
-                </button>
-                <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '12px', textAlign: 'center' }}>
-                  * Verifica RFC, SAT, RPPC e INE (simulado)
-                </p>
-              </>
-            ) : (
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px', padding: '20px', background: dueDiligenceResult.score >= 70 ? 'rgba(34,197,94,0.1)' : dueDiligenceResult.score >= 40 ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)', borderRadius: '12px' }}>
-                  <span style={{ fontSize: '48px' }}>{dueDiligenceResult.score >= 70 ? '✅' : dueDiligenceResult.score >= 40 ? '⚠️' : '❌'}</span>
-                  <div>
-                    <h3 style={{ fontSize: '22px', color: dueDiligenceResult.score >= 70 ? '#22c55e' : dueDiligenceResult.score >= 40 ? '#f59e0b' : '#ef4444' }}>
-                      {dueDiligenceResult.resultado}
-                    </h3>
-                    <p style={{ fontSize: '14px', color: 'var(--muted)' }}>Score: {dueDiligenceResult.score}/100 • Riesgo: {dueDiligenceResult.nivelRiesgo}</p>
-                  </div>
-                </div>
-
-                {dueDiligenceResult.riesgos?.length > 0 && (
-                  <div style={{ marginBottom: '16px', padding: '12px', background: 'rgba(239,68,68,0.1)', borderRadius: '8px' }}>
-                    <h4 style={{ fontSize: '14px', color: '#ef4444', marginBottom: '8px' }}>⚠️ Riesgos identificados:</h4>
-                    <ul style={{ fontSize: '13px', color: 'var(--text)', paddingLeft: '20px' }}>
-                      {dueDiligenceResult.riesgos.map((r: string, i: number) => <li key={i}>{r}</li>)}
-                    </ul>
-                  </div>
-                )}
-
-                {dueDiligenceResult.detalles?.fiscal && (
-                  <div style={{ marginBottom: '12px', padding: '12px', background: 'var(--bg)', borderRadius: '8px' }}>
-                    <h4 style={{ fontSize: '14px', color: 'var(--secondary)', marginBottom: '8px' }}>📋 RFC</h4>
-                    <p style={{ fontSize: '13px', color: 'var(--text)' }}>Estatus: {dueDiligenceResult.detalles.fiscal.estatus}</p>
-                    <p style={{ fontSize: '13px', color: 'var(--text)' }}>Régimen: {dueDiligenceResult.detalles.fiscal.regimen}</p>
-                  </div>
-                )}
-
-                {dueDiligenceResult.detalles?.sat && (
-                  <div style={{ marginBottom: '12px', padding: '12px', background: 'var(--bg)', borderRadius: '8px' }}>
-                    <h4 style={{ fontSize: '14px', color: 'var(--secondary)', marginBottom: '8px' }}>🏛️ SAT</h4>
-                    <p style={{ fontSize: '13px', color: 'var(--text)' }}>Situación: {dueDiligenceResult.detalles.sat.situacionFiscal}</p>
-                    <p style={{ fontSize: '13px', color: 'var(--text)' }}>Cumplimiento: {dueDiligenceResult.detalles.sat.OpinionCumplimiento}</p>
-                  </div>
-                )}
-
-                {dueDiligenceResult.detalles?.mercantil && (
-                  <div style={{ marginBottom: '12px', padding: '12px', background: 'var(--bg)', borderRadius: '8px' }}>
-                    <h4 style={{ fontSize: '14px', color: 'var(--secondary)', marginBottom: '8px' }}>📜 RPPC</h4>
-                    <p style={{ fontSize: '13px', color: 'var(--text)' }}>Status: {dueDiligenceResult.detalles.mercantil.status}</p>
-                    <p style={{ fontSize: '13px', color: 'var(--text)' }}>Escritura: {dueDiligenceResult.detalles.mercantil.numeroEscritura}</p>
-                  </div>
-                )}
-
-                {dueDiligenceResult.recomendaciones && (
-                  <div style={{ marginBottom: '20px', padding: '12px', background: 'rgba(59,130,246,0.1)', borderRadius: '8px' }}>
-                    <h4 style={{ fontSize: '14px', color: '#3b82f6', marginBottom: '8px' }}>💡 Recomendaciones:</h4>
-                    <ul style={{ fontSize: '13px', color: 'var(--text)', paddingLeft: '20px' }}>
-                      {dueDiligenceResult.recomendaciones.map((r: string, i: number) => <li key={i}>{r}</li>)}
-                    </ul>
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button onClick={() => setDueDiligenceResult(null)} style={{ flex: 1, padding: '12px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer' }}>Nueva verificación</button>
-                  <button onClick={() => { setShowDueDiligence(false); setDueDiligenceResult(null); }} style={{ flex: 1, padding: '12px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Cerrar</button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Generador de Contratos Modal */}
-      {showContratoForm && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 3000, padding: '20px' }}>
-          <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '24px', width: '100%', maxWidth: '700px', maxHeight: '90vh', overflow: 'auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '20px', color: 'var(--secondary)' }}>📜 Generador de Contratos</h2>
-              <button onClick={() => { setShowContratoForm(false); setContratoGenerado(''); }} style={{ background: 'none', border: 'none', color: 'var(--text)', fontSize: '24px', cursor: 'pointer' }}>×</button>
-            </div>
-
-            {!contratoGenerado ? (
-              <>
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', fontSize: '14px', marginBottom: '8px', color: 'var(--text)' }}>Tipo de contrato:</label>
-                  <select value={tipoContrato} onChange={(e) => setTipoContrato(e.target.value)} style={{ width: '100%', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}>
-                    <option value="arrendamiento">Contrato de Arrendamiento</option>
-                    <option value="comodato">Contrato de Comodato</option>
-                    <option value="mutuo">Contrato de Mutuo</option>
-                  </select>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: 'var(--text)' }}>Nombre del Arrendador:*</label>
-                    <input value={contratoDatos.nombreArrendador} onChange={(e) => setContratoDatos({...contratoDatos, nombreArrendador: e.target.value})} placeholder="Juan Pérez García" style={{ width: '100%', padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px' }} />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: 'var(--text)' }}>RFC Arrendador:</label>
-                    <input value={contratoDatos.rfcArrendador} onChange={(e) => setContratoDatos({...contratoDatos, rfcArrendador: e.target.value})} placeholder="PEGJ800101ABC" style={{ width: '100%', padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px', textTransform: 'uppercase' }} />
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: 'var(--text)' }}>Nombre del Arrendatario:*</label>
-                  <input value={contratoDatos.nombreArrendatario} onChange={(e) => setContratoDatos({...contratoDatos, nombreArrendatario: e.target.value})} placeholder="María López Hernández" style={{ width: '100%', padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px' }} />
-                </div>
-
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: 'var(--text)' }}>Dirección del Inmueble:*</label>
-                  <input value={contratoDatos.direccionInmueble} onChange={(e) => setContratoDatos({...contratoDatos, direccionInmueble: e.target.value})} placeholder="Calle, Número, Colonia, Ciudad, Estado, CP" style={{ width: '100%', padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px' }} />
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: 'var(--text)' }}>Renta Mensual:*</label>
-                    <input value={contratoDatos.rentaMensual} onChange={(e) => setContratoDatos({...contratoDatos, rentaMensual: e.target.value})} placeholder="$15,000" style={{ width: '100%', padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px' }} />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: 'var(--text)' }}>Fecha de Inicio:*</label>
-                    <input type="date" value={contratoDatos.fechaInicio} onChange={(e) => setContratoDatos({...contratoDatos, fechaInicio: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px' }} />
-                  </div>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: 'var(--text)' }}>Duración:*</label>
-                    <select value={contratoDatos.duracion} onChange={(e) => setContratoDatos({...contratoDatos, duracion: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px' }}>
-                      <option value="">Seleccionar</option>
-                      <option value="6 meses">6 meses</option>
-                      <option value="1 año">1 año</option>
-                      <option value="2 años">2 años</option>
-                      <option value="3 años">3 años</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: 'var(--text)' }}>Depósito Garantía:</label>
-                    <input value={contratoDatos.depositoGarantia} onChange={(e) => setContratoDatos({...contratoDatos, depositoGarantia: e.target.value})} placeholder="$30,000" style={{ width: '100%', padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px' }} />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', marginBottom: '6px', color: 'var(--text)' }}>Día de Pago:</label>
-                    <select value={contratoDatos.diaPago} onChange={(e) => setContratoDatos({...contratoDatos, diaPago: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px' }}>
-                      {[...Array(28)].map((_, i) => <option key={i+1} value={i+1}>{i+1}</option>)}
-                    </select>
-                  </div>
-                </div>
-
-                <button onClick={async () => {
-                  if (!contratoDatos.nombreArrendador || !contratoDatos.nombreArrendatario || !contratoDatos.direccionInmueble || !contratoDatos.rentaMensual || !contratoDatos.fechaInicio || !contratoDatos.duracion) {
-                    showToast('Completa los campos obligatorios (*)', 'error');
-                    return;
-                  }
-                  setIsGenerandoContrato(true);
-                  try {
-                    const res = await fetch('/api/contratos', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ tipo: tipoContrato, datos: {
-                        NOMBRE_ARRENDADOR: contratoDatos.nombreArrendador,
-                        RFC_ARRENDADOR: contratoDatos.rfcArrendador || 'No especificado',
-                        NOMBRE_ARRENDATARIO: contratoDatos.nombreArrendatario,
-                        DIRECCION_INMUEBLE: contratoDatos.direccionInmueble,
-                        MONTO: contratoDatos.rentaMensual,
-                        FECHA: contratoDatos.fechaInicio,
-                        PLAZO: contratoDatos.duracion,
-                        DEPOSITO: contratoDatos.depositoGarantia || 'No especificado',
-                        DIA_PAGO: contratoDatos.diaPago
-                      }})
-                    });
-                    const data = await res.json();
-                    if (data.success) {
-                      setContratoGenerado(data.contenido);
-                    } else {
-                      showToast('Error al generar contrato', 'error');
-                    }
-                  } catch (err) {
-                    showToast('Error al generar contrato', 'error');
-                  } finally {
-                    setIsGenerandoContrato(false);
-                  }
-                }} disabled={isGenerandoContrato} style={{ width: '100%', padding: '14px', background: isGenerandoContrato ? 'var(--muted)' : 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: isGenerandoContrato ? 'not-allowed' : 'pointer', fontSize: '16px', fontWeight: 600 }}>
-                  {isGenerandoContrato ? 'Generando...' : '📜 Generar Contrato'}
-                </button>
-                <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '12px', textAlign: 'center' }}>
-                  * Este contrato cumple con los lineamientos de PROFECO
-                </p>
-              </>
-            ) : (
-              <div>
-                <div style={{ marginBottom: '16px', padding: '12px', background: 'rgba(59,130,246,0.1)', borderRadius: '8px' }}>
-                  <p style={{ fontSize: '13px', color: 'var(--text)' }}>✅ Contrato generado correctamente. Puedes copiarlo o descargarlo en Word.</p>
-                </div>
-                <div style={{ marginBottom: '16px' }}>
-                  <textarea value={contratoGenerado} onChange={(e) => setContratoGenerado(e.target.value)} style={{ width: '100%', height: '300px', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '12px', fontFamily: 'monospace' }} />
-                </div>
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button onClick={() => { navigator.clipboard.writeText(contratoGenerado); showToast('Contrato copiado', 'success'); }} style={{ flex: 1, padding: '12px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer' }}>📋 Copiar</button>
-                  <button onClick={async () => {
-                    try {
-                      const res = await fetch('/api/word', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ type: 'contrato-texto', data: { contenido: contratoGenerado } })
-                      });
-                      const result = await res.json();
-                      if (result.success) {
-                        const link = document.createElement('a');
-                        link.href = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${result.document}`;
-                        link.download = `contrato_${new Date().toISOString().split('T')[0]}.docx`;
-                        link.click();
-                        showToast('Contrato descargado', 'success');
-                      }
-                    } catch (e) {
-                      showToast('Error al descargar', 'error');
-                    }
-                  }} style={{ flex: 1, padding: '12px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>📄 Descargar Word</button>
-                </div>
-                <button onClick={() => { setContratoGenerado(''); }} style={{ width: '100%', marginTop: '12px', padding: '12px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer' }}>Generar otro contrato</button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Toast Notifications */}
-      {toast && (
-        <div style={{
-          position: 'fixed', bottom: '24px', right: '24px',
-          padding: '14px 24px', borderRadius: '8px',
-          background: toast.type === 'success' ? '#22c55e' : toast.type === 'error' ? '#ef4444' : '#3b82f6',
-          color: '#fff', fontSize: '14px', fontWeight: 500,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 9999,
-          animation: 'slideIn 0.3s ease'
-        }}>
-          {toast.message}
-        </div>
-      )}
-
-      {/* Confirm Delete Modal */}
-      {confirmDelete && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 }}>
-          <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '24px', width: '400px' }}>
-            <h2 style={{ fontSize: '18px', marginBottom: '12px', color: 'var(--secondary)' }}>⚠️ Confirmar eliminación</h2>
-            <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '20px' }}>{confirmDelete.message}</p>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button onClick={() => {
-                if (confirmDelete.type === 'cliente') deleteCliente(confirmDelete.id);
-                else if (confirmDelete.type === 'caso') deleteCaso(confirmDelete.id);
-                else if (confirmDelete.type === 'prospecto') deleteProspecto(confirmDelete.id);
-                else if (confirmDelete.type === 'cita') deleteCita(confirmDelete.id);
-                else if (confirmDelete.type === 'plazo') deletePlazo(confirmDelete.id);
-                else if (confirmDelete.type === 'evento') deleteEvento(confirmDelete.id);
-                else if (confirmDelete.type === 'documento') deleteDocumento(confirmDelete.id);
-                else if (confirmDelete.type === 'factura') deleteFactura(confirmDelete.id);
-                else if (confirmDelete.type === 'teamMember') {
-                  setTeamMembers(teamMembers.filter(m => m.id !== confirmDelete.id));
-                  showToast('Miembro eliminado', 'success');
-                }
-                setConfirmDelete(null);
-                showToast('Eliminado correctamente', 'success');
-              }} style={{ flex: 1, padding: '12px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Eliminar</button>
-              <button onClick={() => setConfirmDelete(null)} style={{ flex: 1, padding: '12px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer' }}>Cancelar</button>
-            </div>
-            </div>
-          </div>
-        )}
-
-      {/* Contract Analysis Modal */}
-      {showContractAnalysis && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: '20px' }}>
-          <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '24px', width: '100%', maxWidth: '700px', maxHeight: '90vh', overflow: 'auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '20px', color: 'var(--secondary)' }}>📝 Análisis de Contrato</h2>
-              <button onClick={() => { setShowContractAnalysis(false); setContractText(''); setAnalysisResult(null); }} style={{ background: 'none', border: 'none', color: 'var(--text)', fontSize: '24px', cursor: 'pointer' }}>×</button>
+      {/* Global Modals (Search, DD, etc.) */}
+      {showSearch && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(3,6,11,0.9)', backdropFilter: 'blur(20px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1000, paddingTop: '100px' }}>
+          <div className="glass-card scale-up" style={{ width: '100%', maxWidth: '650px', padding: '32px', border: '1px solid var(--primary)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '24px' }}>
+              <span style={{ fontSize: '32px' }}>🔍</span>
+              <input 
+                autoFocus
+                type="text" 
+                placeholder="Busca casos, leyes, clientes o citas..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ flex: 1, background: 'none', border: 'none', color: 'var(--text)', fontSize: '20px', outline: 'none' }}
+                onKeyDown={(e) => { if (e.key === 'Escape') setShowSearch(false); }}
+              />
+              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', border: '1px solid var(--border)' }}>ESC</div>
             </div>
             
-            {!analysisResult ? (
-              <>
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', fontSize: '14px', marginBottom: '8px', color: 'var(--text)' }}>Tipo de contrato:</label>
-                  <select value={contractType} onChange={(e) => setContractType(e.target.value)} style={{ width: '100%', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}>
-                    <option value="general">General</option>
-                    <option value="arrendamiento">Arrendamiento</option>
-                    <option value="prestacion-servicios">Prestación de servicios</option>
-                    <option value="compraventa">Compraventa</option>
-                    <option value="mutuo">Mutuo</option>
-                    <option value="sociedad">Contrato de sociedad</option>
-                  </select>
-                </div>
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', fontSize: '14px', marginBottom: '8px', color: 'var(--text)' }}>Pega el texto del contrato:</label>
-                  <textarea value={contractText} onChange={(e) => setContractText(e.target.value)} placeholder="Pega aquí el contenido del contrato que deseas analizar..." style={{ width: '100%', height: '200px', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '14px', resize: 'vertical' }} />
-                </div>
-                <button onClick={async () => {
-                  if (!contractText.trim()) {
-                    showToast('Por favor ingresa el texto del contrato', 'error');
-                    return;
-                  }
-                  setIsAnalyzing(true);
-                  try {
-                    const res = await fetch('/api/analyze', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ type: 'contrato-analisis', data: { texto: contractText, tipo: contractType } })
-                    });
-                    const data = await res.json();
-                    setAnalysisResult(data);
-                  } catch (err) {
-                    showToast('Error al analizar contrato', 'error');
-                  } finally {
-                    setIsAnalyzing(false);
-                  }
-                }} disabled={isAnalyzing} style={{ width: '100%', padding: '14px', background: isAnalyzing ? 'var(--muted)' : 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: isAnalyzing ? 'not-allowed' : 'pointer', fontSize: '16px', fontWeight: 600 }}>
-                  {isAnalyzing ? 'Analizando...' : '🔍 Analizar Contrato'}
-                </button>
-              </>
-            ) : (
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', padding: '16px', background: analysisResult.overallRisk > 50 ? 'rgba(239,68,68,0.1)' : analysisResult.overallRisk > 25 ? 'rgba(245,158,11,0.1)' : 'rgba(34,197,94,0.1)', borderRadius: '8px' }}>
-                  <span style={{ fontSize: '48px' }}>{analysisResult.overallRisk > 50 ? '⚠️' : analysisResult.overallRisk > 25 ? '⚡' : '✓'}</span>
-                  <div>
-                    <h3 style={{ fontSize: '18px', color: analysisResult.overallRisk > 50 ? '#ef4444' : analysisResult.overallRisk > 25 ? '#f59e0b' : '#22c55e' }}>Riesgo: {analysisResult.score}</h3>
-                    <p style={{ fontSize: '14px', color: 'var(--muted)' }}>Puntuación: {analysisResult.overallRisk}/100</p>
-                  </div>
-                </div>
-                
-                {analysisResult.legalRisks?.length > 0 && (
-                  <div style={{ marginBottom: '16px' }}>
-                    <h4 style={{ fontSize: '14px', color: '#ef4444', marginBottom: '8px' }}>⚠️ Riesgos legales detectados:</h4>
-                    <ul style={{ fontSize: '13px', color: 'var(--text)', paddingLeft: '20px' }}>
-                      {analysisResult.legalRisks.map((r: string, i: number) => <li key={i} style={{ marginBottom: '4px' }}>{r}</li>)}
-                    </ul>
-                  </div>
-                )}
-                
-                {analysisResult.missingClauses?.length > 0 && (
-                  <div style={{ marginBottom: '16px' }}>
-                    <h4 style={{ fontSize: '14px', color: '#f59e0b', marginBottom: '8px' }}>📋 Cláusulas faltantes:</h4>
-                    <ul style={{ fontSize: '13px', color: 'var(--text)', paddingLeft: '20px' }}>
-                      {analysisResult.missingClauses.map((c: string, i: number) => <li key={i} style={{ marginBottom: '4px' }}>{c}</li>)}
-                    </ul>
-                  </div>
-                )}
-                
-                {analysisResult.recommendations?.length > 0 && (
-                  <div style={{ marginBottom: '16px' }}>
-                    <h4 style={{ fontSize: '14px', color: 'var(--secondary)', marginBottom: '8px' }}>💡 Recomendaciones:</h4>
-                    <ul style={{ fontSize: '13px', color: 'var(--text)', paddingLeft: '20px' }}>
-                      {analysisResult.recommendations.map((r: string, i: number) => <li key={i} style={{ marginBottom: '4px' }}>{r}</li>)}
-                    </ul>
-                  </div>
-                )}
-                
-                {analysisResult.relevantPrecedents?.length > 0 && (
-                  <div style={{ marginBottom: '20px' }}>
-                    <h4 style={{ fontSize: '14px', color: 'var(--secondary)', marginBottom: '8px' }}>📚 Precedentes relevantes:</h4>
-                    {analysisResult.relevantPrecedents.map((p: any, i: number) => (
-                      <div key={i} style={{ padding: '12px', background: 'var(--bg)', borderRadius: '8px', marginBottom: '8px' }}>
-                        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>{p.titulo}</p>
-                        <p style={{ fontSize: '12px', color: 'var(--muted)' }}>{p.tesis}</p>
+            <div style={{ maxHeight: '450px', overflowY: 'auto' }}>
+              {searchQuery.length > 2 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {clientes.filter(c => c.nombre.toLowerCase().includes(searchQuery.toLowerCase())).map(c => (
+                    <div key={c.id} onClick={() => { setSelectedCliente(c); setActiveTab('casos'); setShowSearch(false); }} className="nav-item glass-card" style={{ padding: '16px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}>
+                      <div>
+                        <p style={{ margin: 0, fontWeight: 700, color: 'var(--primary)' }}>{c.nombre}</p>
+                        <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)' }}>Cliente • {c.correo}</p>
                       </div>
-                    ))}
-                  </div>
-                )}
-                
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button onClick={() => setAnalysisResult(null)} style={{ flex: 1, padding: '12px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer' }}>Nuevo análisis</button>
-                  <button onClick={() => { setShowContractAnalysis(false); setContractText(''); setAnalysisResult(null); }} style={{ flex: 1, padding: '12px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Cerrar</button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* OCR Results Modal */}
-      {showOcr && ocrResult && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: '20px' }}>
-          <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '24px', width: '100%', maxWidth: '700px', maxHeight: '90vh', overflow: 'auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '20px', color: 'var(--secondary)' }}>📷 Resultado OCR</h2>
-              <button onClick={() => { setShowOcr(false); setOcrResult(null); }} style={{ background: 'none', border: 'none', color: 'var(--text)', fontSize: '24px', cursor: 'pointer' }}>×</button>
-            </div>
-            
-            <div style={{ marginBottom: '16px', padding: '16px', background: 'var(--bg)', borderRadius: '8px' }}>
-              <h4 style={{ fontSize: '14px', color: 'var(--secondary)', marginBottom: '8px' }}>📋 Tipo de documento detectado:</h4>
-              <p style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', textTransform: 'uppercase' }}>{ocrResult.analysis?.detectedType}</p>
-            </div>
-            
-            <div style={{ marginBottom: '16px' }}>
-              <h4 style={{ fontSize: '14px', color: 'var(--secondary)', marginBottom: '8px' }}>🔑 Términos legales detectados:</h4>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {(ocrResult.analysis?.keywords || []).map((kw: string, i: number) => (
-                  <span key={i} style={{ padding: '4px 10px', background: 'var(--surface-hover)', borderRadius: '12px', fontSize: '12px', color: 'var(--text)' }}>{kw}</span>
-                ))}
-              </div>
-            </div>
-            
-            {(ocrResult.analysis?.entities?.dates?.length > 0 || ocrResult.analysis?.entities?.amounts?.length > 0) && (
-              <div style={{ marginBottom: '16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <div style={{ padding: '12px', background: 'var(--bg)', borderRadius: '8px' }}>
-                  <h4 style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '8px' }}>📅 Fechas encontradas:</h4>
-                  {(ocrResult.analysis?.entities?.dates || []).map((d: string, i: number) => (
-                    <p key={i} style={{ fontSize: '13px', color: 'var(--text)' }}>{d}</p>
+                      <span>➡️</span>
+                    </div>
+                  ))}
+                  {casos.filter(c => c.titulo.toLowerCase().includes(searchQuery.toLowerCase())).map(c => (
+                    <div key={c.id} onClick={() => { setSelectedCaso(c); setActiveTab('casos'); setShowSearch(false); }} className="nav-item glass-card" style={{ padding: '16px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}>
+                      <div>
+                        <p style={{ margin: 0, fontWeight: 700, color: 'var(--primary)' }}>{c.titulo}</p>
+                        <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)' }}>Caso • {c.materia}</p>
+                      </div>
+                      <span>➡️</span>
+                    </div>
                   ))}
                 </div>
-                <div style={{ padding: '12px', background: 'var(--bg)', borderRadius: '8px' }}>
-                  <h4 style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '8px' }}>💰 Montos encontrados:</h4>
-                  {(ocrResult.analysis?.entities?.amounts || []).map((a: string, i: number) => (
-                    <p key={i} style={{ fontSize: '13px', color: 'var(--text)' }}>{a}</p>
-                  ))}
+              ) : (
+                <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)' }}>
+                  Escribe para comenzar la búsqueda legal integrada...
                 </div>
-              </div>
-            )}
-            
-            {ocrResult.analysis?.risks?.length > 0 && (
-              <div style={{ marginBottom: '16px', padding: '12px', background: 'rgba(239,68,68,0.1)', borderRadius: '8px' }}>
-                <h4 style={{ fontSize: '14px', color: '#ef4444', marginBottom: '8px' }}>⚠️ Riesgos identificados:</h4>
-                <ul style={{ fontSize: '13px', color: 'var(--text)', paddingLeft: '20px' }}>
-                  {ocrResult.analysis.risks.map((r: string, i: number) => <li key={i}>{r}</li>)}
-                </ul>
-              </div>
-            )}
-            
-            <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ fontSize: '14px', color: 'var(--secondary)', marginBottom: '8px' }}>📄 Texto extraído:</h4>
-              <textarea readOnly value={ocrResult.text} style={{ width: '100%', height: '150px', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', fontSize: '13px' }} />
-            </div>
-            
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button onClick={() => { navigator.clipboard.writeText(ocrResult.text); showToast('Texto copiado', 'success'); }} style={{ flex: 1, padding: '12px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer' }}>📋 Copiar texto</button>
-              <button onClick={() => { setShowContractAnalysis(true); setContractText(ocrResult.text); setShowOcr(false); }} style={{ flex: 1, padding: '12px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>📝 Analizar contrato</button>
+              )}
             </div>
           </div>
         </div>
       )}
 
-      {/* Floating Action Button for Mobile */}
-      {isMobile && activeTab !== 'chat' && (
-        <button 
-          onClick={() => setActiveTab('chat')}
-          className="fab animate-float"
-          style={{
-            position: 'fixed',
-            bottom: '100px',
-            right: '20px',
-            width: '60px',
-            height: '60px',
-            borderRadius: '18px',
-            background: 'linear-gradient(135deg, var(--secondary) 0%, #E8C547 100%)',
-            color: '#0D1117',
-            fontSize: '24px',
-            border: 'none',
-            cursor: 'pointer',
-            boxShadow: '0 8px 30px rgba(201, 162, 39, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 900
-          }}
-        >
-          💬
-        </button>
+      {/* Due Diligence Result Modal */}
+      {showDueDiligence && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 }}>
+           <div className="glass-panel animate-fade" style={{ width: '100%', maxWidth: '600px', padding: '32px', border: '1px solid var(--primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
+                 <h2 style={{ margin: 0, fontFamily: 'Playfair Display' }}>✅ Verificación Due Diligence</h2>
+                 <button onClick={() => setShowDueDiligence(false)} className="nav-item" style={{ padding: '8px' }}>✕</button>
+              </div>
+              
+              {!dueDiligenceResult ? (
+                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <input value={ddForm.nombre} onChange={(e) => setDdForm({...ddForm, nombre: e.target.value})} placeholder="Nombre o Razón Social" className="glass-card" style={{ padding: '16px', background: 'none', border: '1px solid var(--border)', width: '100%', color: 'var(--text)' }} />
+                    <input value={ddForm.rfc} onChange={(e) => setDdForm({...ddForm, rfc: e.target.value})} placeholder="RFC / Identificación" className="glass-card" style={{ padding: '16px', background: 'none', border: '1px solid var(--border)', width: '100%', color: 'var(--text)' }} />
+                    <button 
+                      onClick={async () => {
+                         setIsCheckingDD(true);
+                         // Real simulation
+                         setTimeout(() => {
+                            setDueDiligenceResult({
+                               score: 85,
+                               resultado: "Aprobado con Observaciones",
+                               nivelRiesgo: "Bajo",
+                               detalles: ["Sin antecedentes penales", "RFC activo y vigente", "Múltiples registros comerciales válidos"]
+                            });
+                            setIsCheckingDD(false);
+                         }, 2000);
+                      }}
+                      className="btn-premium"
+                      style={{ height: '56px', justifyContent: 'center' }}
+                    >
+                       {isCheckingDD ? "Analizando registros nacionales..." : "Iniciar Análisis de Riesgo"}
+                    </button>
+                 </div>
+              ) : (
+                <div style={{ animation: 'fadeIn 0.5s' }}>
+                   <div style={{ padding: '24px', background: 'rgba(201,162,39,0.1)', borderRadius: '16px', marginBottom: '24px', border: '1px solid var(--primary)' }}>
+                      <p style={{ margin: 0, fontSize: '14px', color: 'var(--primary)' }}>RESULTADO DEL ANÁLISIS</p>
+                      <h3 style={{ margin: '8px 0', fontSize: '24px' }}>{dueDiligenceResult.resultado}</h3>
+                      <div style={{ display: 'flex', gap: '20px', marginTop: '12px' }}>
+                         <div>
+                            <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>SCORE</p>
+                            <p style={{ margin: 0, fontWeight: 700, fontSize: '20px' }}>{dueDiligenceResult.score}/100</p>
+                         </div>
+                         <div>
+                            <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>RIESGO</p>
+                            <p style={{ margin: 0, fontWeight: 700, fontSize: '20px', color: '#22c55e' }}>{dueDiligenceResult.nivelRiesgo}</p>
+                         </div>
+                      </div>
+                   </div>
+                   <button onClick={() => setDueDiligenceResult(null)} className="btn-premium" style={{ width: '100%', justifyContent: 'center' }}>Nueva Verificación</button>
+                </div>
+              )}
+           </div>
+        </div>
       )}
 
-      {isMobile && (
-        <nav className="mobile-nav" style={{ paddingBottom: '28px' }}>
-          {[
-            { id: 'chat', label: 'Chat', icon: '💬' },
-            { id: 'prospectos', label: 'Prosp.', icon: '🤝' },
-            { id: 'casos', label: 'Casos', icon: '📁' },
-            { id: 'citas', label: 'Citas', icon: '📆' },
-            { id: 'library', label: 'Leyes', icon: '📜' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`mobile-nav-item ${activeTab === tab.id ? 'active' : ''}`}
-              style={{
-                background: activeTab === tab.id ? 'rgba(201, 162, 39, 0.15)' : 'transparent',
-              }}
-            >
-              <span style={{ fontSize: '22px' }}>{tab.icon}</span>
-              {tab.label}
-            </button>
-          ))}
-        </nav>
-      )}
-
-      <footer style={{ padding: isMobile ? '12px 16px' : '16px 24px', textAlign: 'center', borderTop: '1px solid var(--border)', color: 'var(--muted)', fontSize: '12px', background: 'var(--surface)', display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      {/* Footer / Status Bar */}
+      <footer style={{ 
+        height: '40px', 
+        padding: '0 32px', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        fontSize: '11px', 
+        color: 'var(--text-muted)', 
+        borderTop: '1px solid var(--border)',
+        zIndex: 10,
+        background: 'rgba(3,6,11,0.5)'
+      }}>
+        <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            {isSaving ? (
-              <span style={{ color: '#f59e0b' }}>⏳ Guardando...</span>
-            ) : (
-              <span style={{ color: '#22c55e' }}>✓ Guardado</span>
-            )}
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: isSaving ? '#f59e0b' : '#22c55e' }} />
+            {isSaving ? "Guardando cambios encriptados..." : "LexMex Cloud: Sistema Sincronizado"}
           </div>
-          {!isMobile && <span style={{ opacity: 0.5 }}>|</span>}
-          {!isMobile && <span>Ctrl+K Buscar | Ctrl+1-9 Pestañas | Esc Cerrar</span>}
+          <span style={{ opacity: 0.3 }}>|</span>
+          <span>Región: México (CDMX)</span>
         </div>
-        <div><strong style={{ color: 'var(--secondary)' }}>LexMex</strong> v2.0 • Asesor Legal</div>
-        <div style={{ fontSize: '11px', maxWidth: isMobile ? '100%' : '300px' }}>Disclaimer: Información orientativa, no constituye asesoría legal.</div>
+        <div style={{ display: 'flex', gap: '24px' }}>
+           <span>LexMex Premium v2.1.0</span>
+           <span style={{ fontWeight: 700, color: 'var(--primary)' }}>© 2026 LexMex AI Legal Systems</span>
+        </div>
       </footer>
+
+      {/* Notifications */}
+      {toast && (
+        <div className="animate-fade" style={{ position: 'fixed', bottom: '60px', right: '32px', padding: '16px 24px', background: 'var(--primary)', color: '#03060b', borderRadius: '12px', fontWeight: 700, boxShadow: '0 10px 30px rgba(0,0,0,0.5)', zIndex: 9999 }}>
+           {toast.message}
+        </div>
+      )}
     </div>
   );
 }

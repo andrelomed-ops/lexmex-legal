@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import { plantillas, materiasDisponibles, type Plantilla } from '@/data/plantillas';
 
-export default function PlantillasView() {
+export default function PlantillasView({ plantillas: propsPlantillas, onSelect }: { plantillas?: Plantilla[], onSelect?: (p: Plantilla) => void }) {
+  const dataPlantillas = propsPlantillas || plantillas;
   const [search, setSearch] = useState('');
   const [materia, setMateria] = useState('');
   const [selected, setSelected] = useState<Plantilla | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const filtered = plantillas.filter(p => {
+  const filtered = dataPlantillas.filter(p => {
     const matchSearch = !search || p.nombre.toLowerCase().includes(search.toLowerCase()) || p.descripcion.toLowerCase().includes(search.toLowerCase());
     const matchMateria = !materia || p.materia === materia;
     return matchSearch && matchMateria;

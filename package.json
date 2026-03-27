@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Asesor Legal Inteligente - Derecho Mexicano",
   "scripts": {
-    "dev": "next dev -p 3456",
+    "dev": "next dev -p 3457",
     "build": "next build",
     "start": "next start"
   },
@@ -12,10 +12,11 @@
     "file-saver": "^2.0.5",
     "jspdf": "^4.2.0",
     "mammoth": "^1.11.0",
-    "next": "^16.1.6",
+    "next": "14.2.15",
+    "openai": "^6.33.0",
     "pdf-parse": "^2.4.5",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "tesseract.js": "^7.0.0"
   },
   "devDependencies": {

@@ -1,28 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
+import OpenAI from 'openai';
 
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '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';
-const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const groq = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1"
+});
 
-const SYSTEM_PROMPT = `Eres LexMex, ABOGADO mexicano. Das asesoría directa y precisa.
+const SYSTEM_PROMPT = `Eres LexMex, ABOGADO mexicano experto en todas las materias. Das asesoría directa y precisa.
 
 ## REGLAS OBLIGATORIAS:
 1. NUNCA preguntes "¿quieres que...?"
-2. NUNCA digas "consulta un abogado" 
-3. NUNCA digas "lo siento"
-4. NUNCA digas "como IA"
-5. SIEMPRE da opinión legal directa
-6. Sé conciso y directo
+2. NUNCA digas "consulta un abogado" (TÚ ERES EL ABOGADO)
+3. NUNCA digas "lo siento" o "como IA"
+4. SIEMPRE da una opinión legal fundamentada
+5. Sé conciso pero exhaustivo en los fundamentos
+6. Usa un tono formal pero moderno (Abogado Digital)
 
 ## FORMATO DE RESPUESTA:
-1. Fundamento legal (artículo)
-2. Análisis directo
-3. Qué hacer`;
+### ⚖️ Fundamento Legal
+- Cita los artículos exactos (Constitución, Código Civil, Ley Federal del Trabajo, etc.)
+
+### 🔍 Análisis del Caso
+- Explicación directa de la situación jurídica.
+
+### 🚀 Acción Recomendada
+- Pasos concretos a seguir ahora mismo.`;
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
-    const messageText = formData.get('text') as string;
-    
     const rawMessages = formData.get('messages') as string;
     const parsedMessages = rawMessages ? JSON.parse(rawMessages) : [];
     
@@ -35,43 +41,32 @@ export async function POST(req: NextRequest) {
       ...parsedMessages
     ];
 
-    const response = await fetch(OPENROUTER_API_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://lexmex-legal.vercel.app',
-        'X-Title': 'LexMex - Asesor Legal'
-      },
-      body: JSON.stringify({
-        model: 'openrouter/free',
-        messages: messages,
-        temperature: 0.7,
-        max_tokens: 1500
-      })
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: messages as any,
+      temperature: 0.5,
+      max_tokens: 2048,
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
+    return NextResponse.json({
+      message: completion.choices[0]?.message?.content || 'No se recibió respuesta',
+      usage: completion.usage
+    });
+
+  } catch (error: any) {
+    console.error('Error en el chat con Groq:', error);
+    
+    if (error.status === 401) {
       return NextResponse.json(
-        { error: errorData.error?.message || 'Error al comunicarse con la API' },
-        { status: response.status }
+        { error: 'Error de autenticación con Groq. Verifica tu API Key en .env' },
+        { status: 401 }
       );
     }
 
-    const data = await response.json();
-    
-    return NextResponse.json({
-      message: data.choices?.[0]?.message?.content || 'No se recibió respuesta',
-      usage: data.usage
-    });
-
-  } catch (error) {
-    console.error('Error en el chat:', error);
-    const message = error instanceof Error ? error.message : 'Error desconocido';
+    const message = error.message || 'Error desconocido';
     return NextResponse.json(
-      { error: `Error interno: ${message}` },
-      { status: 500 }
+      { error: `Error en el motor de IA: ${message}` },
+      { status: error.status || 500 }
     );
   }
 }
