@@ -15,11 +15,26 @@ export default function CaseDetail({
   onAddPlazo, onTogglePlazo, onDeletePlazo, showNewPlazo, setShowNewPlazo,
   onAddEvento, onDeleteEvento, showNewEvento, setShowNewEvento,
   onAddDocumento, onDeleteDocumento, showNewDocumento, setShowNewDocumento,
+  onUploadDocument,
   onAddConsulta, showNewConsulta, setShowNewConsulta,
   onAddFactura, onUpdateFacturaStatus, onDeleteFactura, showNewFactura, setShowNewFactura,
-  onShowEmail, onShowCall
+  onShowEmail, onShowCall,
+  onGeneratePortalLink,
+  onSignDocument
 }: any) {
+  const [showPortalModal, setShowPortalModal] = useState(false);
+  const [portalLink, setPortalLink] = useState('');
+  const [showSignPad, setShowSignPad] = useState(false);
+  const [signingDocId, setSigningDocId] = useState<string | null>(null);
+
   if (!selectedCliente) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--muted)' }}>Selecciona un cliente para ver sus casos</div>;
+
+  const handleGeneratePortal = async () => {
+    if (!selectedCaso) return;
+    const link = await onGeneratePortalLink(selectedCaso.id);
+    setPortalLink(link);
+    setShowPortalModal(true);
+  };
 
   const statusColors: any = { activo: '#22c55e', pendiente: '#f59e0b', concluso: '#3b82f6', cancelado: '#ef4444' };
   const citaTipoColores: any = { consulta: '#3b82f6', seguimiento: '#22c55e', audiencia: '#ef4444', otra: '#6b7280' };
@@ -81,7 +96,16 @@ export default function CaseDetail({
               </div>
               <p style={{ color: 'var(--muted)', fontSize: '14px' }}>Abierto el {new Date(selectedCaso.fechaApertura).toLocaleDateString('es-MX')} • Materia: {selectedCaso.materia.toUpperCase()}</p>
             </div>
-            <button onClick={() => onDeleteCaso(selectedCaso.id)} style={{ padding: '8px 16px', background: '#ef444422', color: '#ef4444', border: '1px solid #ef4444', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' }}>Eliminar Caso</button>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button 
+                onClick={handleGeneratePortal}
+                className="btn-premium" 
+                style={{ padding: '8px 16px', fontSize: '13px', background: 'rgba(197, 160, 89, 0.1)', color: 'var(--primary)', border: '1.5px solid var(--primary)' }}
+              >
+                🔗 Compartir con Cliente
+              </button>
+              <button onClick={() => onDeleteCaso(selectedCaso.id)} style={{ padding: '8px 16px', background: '#ef444422', color: '#ef4444', border: '1px solid #ef4444', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' }}>Eliminar Caso</button>
+            </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
@@ -174,16 +198,21 @@ export default function CaseDetail({
               </div>
 
               {showNewDocumento && (
-                <form onSubmit={onAddDocumento} style={{ marginBottom: '16px', padding: '12px', background: 'var(--surface)', borderRadius: '8px', border: '1px solid var(--secondary)' }}>
-                  <input name="nombre" placeholder="Nombre del documento" required style={{ width: '100%', padding: '8px', marginBottom: '8px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px', color: 'var(--text)', fontSize: '13px' }} />
-                  <select name="tipo" style={{ width: '100%', padding: '8px', marginBottom: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px', color: 'var(--text)', fontSize: '13px' }}>
-                    <option value="demanda">Demanda/Contestación</option><option value="prueba">Prueba/Anexo</option><option value="resolucion">Resolución</option><option value="contrato">Contrato</option><option value="otro">Otro</option>
-                  </select>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button type="submit" style={{ flex: 1, padding: '6px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>Registrar</button>
-                    <button type="button" onClick={() => setShowNewDocumento(false)} style={{ flex: 1, padding: '6px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '12px' }}>Cancelar</button>
-                  </div>
-                </form>
+                <div style={{ marginBottom: '16px', padding: '16px', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--secondary)', textAlign: 'center' }}>
+                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px' }}>Selecciona un archivo (PDF, Word, Imagen) para subirlo a la nube.</p>
+                  <label className="btn-premium" style={{ display: 'inline-block', padding: '10px 20px', fontSize: '13px', cursor: 'pointer' }}>
+                    Escolher Archivo
+                    <input 
+                      type="file" 
+                      hidden 
+                      onChange={(e) => { 
+                        onUploadDocument(e, selectedCaso.id);
+                        setShowNewDocumento(false);
+                      }} 
+                    />
+                  </label>
+                  <button onClick={() => setShowNewDocumento(false)} style={{ display: 'block', width: '100%', marginTop: '12px', background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '12px', cursor: 'pointer' }}>Cancelar</button>
+                </div>
               )}
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -191,13 +220,22 @@ export default function CaseDetail({
                   <p style={{ fontSize: '12px', color: 'var(--muted)', textAlign: 'center', padding: '20px' }}>Sin documentos registrados</p>
                 ) : (
                   selectedCaso.documentos.map((d: any) => (
-                    <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px', background: 'var(--surface)', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                      <div style={{ width: '32px', height: '32px', background: 'var(--secondary)22', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>📄</div>
+                    <div key={d.id} className="nav-item-fidelity" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                      <div style={{ width: '36px', height: '36px', background: 'rgba(197,160,89,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>📄</div>
                       <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: '13px', fontWeight: 500 }}>{d.nombre}</p>
-                        <p style={{ fontSize: '11px', color: 'var(--muted)' }}>{d.tipo} • {new Date(d.fecha).toLocaleDateString('es-MX')}</p>
+                        <p style={{ fontSize: '13px', fontWeight: 600, margin: 0 }}>{d.nombre}</p>
+                        <p style={{ fontSize: '11px', color: 'var(--muted)', margin: '2px 0 0' }}>{d.tipo} • {new Date(d.fecha).toLocaleDateString('es-MX')}</p>
                       </div>
-                      <button onClick={() => onDeleteDocumento(d.id)} style={{ background: 'none', border: 'none', color: '#ef4444', opacity: 0.5, cursor: 'pointer' }}>✕</button>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button 
+                          onClick={() => { setSigningDocId(d.id); setShowSignPad(true); }}
+                          title="Firmar Documento"
+                          style={{ background: 'none', border: '1px solid rgba(34,197,94,0.3)', color: '#22c55e', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', cursor: 'pointer' }}
+                        >
+                          ✍️
+                        </button>
+                        <button onClick={() => onDeleteDocumento(d.id)} style={{ background: 'none', border: 'none', color: '#ef4444', opacity: 0.5, cursor: 'pointer', fontSize: '16px' }}>✕</button>
+                      </div>
                     </div>
                   ))
                 )}
@@ -267,6 +305,39 @@ export default function CaseDetail({
           <button onClick={() => setShowNewCaso(true)} style={{ marginTop: '16px', padding: '10px 20px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Crear Primer Caso</button>
         </div>
       )}
+
+      {/* MODAL PORTAL CLIENTE */}
+      {showPortalModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(3,6,11,0.9)', backdropFilter: 'blur(20px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100 }}>
+          <div className="glass-card scale-up" style={{ width: '100%', maxWidth: '450px', padding: '32px', border: '1.5px solid var(--primary)', textAlign: 'center' }}>
+             <h2 style={{ fontSize: '24px', color: 'var(--primary)', fontFamily: 'Playfair Display', marginBottom: '12px' }}>Compartir con Cliente</h2>
+             <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '24px' }}>Generado un token de acceso seguro para TuAbogadoIA.</p>
+             <div style={{ padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', marginBottom: '24px', wordBreak: 'break-all', fontSize: '13px', color: 'var(--secondary)' }}>
+                {portalLink}
+             </div>
+             <button onClick={() => { navigator.clipboard.writeText(portalLink); setShowPortalModal(false); }} className="btn-premium" style={{ width: '100%', padding: '14px' }}>Copiar Enlace y Cerrar</button>
+             <button onClick={() => setShowPortalModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '12px', marginTop: '16px', cursor: 'pointer' }}>Cancelar</button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL FIRMA DIGITAL */}
+      {showSignPad && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(3,6,11,0.9)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100 }}>
+             <SignaturePad 
+                onSave={async (signatureData) => {
+                  if (signingDocId) {
+                    await onSignDocument(selectedCaso.id, signingDocId, signatureData);
+                    setShowSignPad(false);
+                    setSigningDocId(null);
+                  }
+                }}
+                onCancel={() => setShowSignPad(false)} 
+             />
+        </div>
+      )}
     </div>
   );
 }
+
+import SignaturePad from './SignaturePad';

@@ -1,0 +1,22 @@
+
+> lexmex@1.0.0 build
+> next build
+
+  Ôû▓ Next.js 14.2.15
+  - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+ Ô£ô Compiled successfully
+   Linting and checking validity of types ...
+Failed to compile.
+
+./app/page.tsx:1820:35
+Type error: Cannot find name 'activeSubTab'. Did you mean 'activeTab'?
+
+  1818 |                     filteredLeyes={buscarLeyes(searchTerm)} 
+  1819 |                     filteredJurisprudencias={buscarJurisprudencia(searchTerm)} 
+> 1820 |                     activeSubTab={activeSubTab} 
+       |                                   ^
+  1821 |                     setActiveSubTab={setActiveSubTab} 
+  1822 |                   />
+  1823 |                )}

@@ -9,58 +9,162 @@ export default function EquipoView({
   onShowCall 
 }: any) {
   return (
-    <div style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '24px', color: 'var(--secondary)' }}>👥 Equipo de Trabajo</h2>
-        <button onClick={() => setShowNewTeamMember(true)} style={{ padding: '10px 20px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}>
-          + Agregar Miembro
+    <div style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* Header View */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: '32px',
+        background: 'rgba(197, 160, 89, 0.05)',
+        padding: '24px',
+        borderRadius: '20px',
+        border: '1px solid rgba(197, 160, 89, 0.1)'
+      }}>
+        <div>
+          <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0, color: '#fff' }}>👥 Miembros del Despacho</h2>
+          <p style={{ margin: '4px 0 0', fontSize: '13px', color: 'var(--text-muted)' }}>Gestiona abogados, especialistas y personal administrativo.</p>
+        </div>
+        <button 
+          onClick={() => setShowNewTeamMember(true)} 
+          className="btn-premium"
+          style={{ padding: '12px 24px', fontSize: '14px' }}
+        >
+          + Agregar Integrante
         </button>
       </div>
 
       {showNewTeamMember && (
-        <form onSubmit={onAddTeamMember} style={{ background: 'var(--surface)', padding: '20px', borderRadius: '12px', marginBottom: '24px', border: '1px solid var(--secondary)' }}>
-          <h3 style={{ fontSize: '16px', marginBottom: '16px', color: 'var(--secondary)' }}>Agregar miembro del equipo</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
-            <input name="nombre" placeholder="Nombre completo" required style={{ padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', color: 'var(--text)' }} />
-            <input name="correo" type="email" placeholder="Correo electrónico" required style={{ padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', color: 'var(--text)' }} />
-            <input name="telefono" placeholder="Teléfono" style={{ padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', color: 'var(--text)' }} />
-            <select name="rol" required style={{ padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', color: 'var(--text)' }}>
-              <option value="">Seleccionar rol</option>
-              <option value="abogado">Abogado</option>
-              <option value="asistente">Asistente Legal</option>
-              <option value="secretario">Secretario</option>
-              <option value="paralegal">Paralegal</option>
-              <option value="admin">Administrador</option>
-            </select>
-          </div>
-          <input name="especialidad" placeholder="Especialidad (opcional)" style={{ width: '100%', padding: '10px', marginBottom: '16px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', color: 'var(--text)' }} />
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button type="submit" style={{ padding: '10px 20px', background: 'var(--secondary)', color: '#0D1117', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}>Guardar</button>
-            <button type="button" onClick={() => setShowNewTeamMember(false)} style={{ padding: '10px 20px', background: 'var(--surface-hover)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '6px', cursor: 'pointer' }}>Cancelar</button>
-          </div>
-        </form>
+        <div className="glass-panel animate-fade" style={{ padding: '32px', marginBottom: '32px', border: '1.5px solid var(--primary)' }}>
+          <h3 style={{ fontSize: '18px', marginBottom: '24px', color: 'var(--primary)', fontFamily: 'Playfair Display' }}>Registro de Nuevo Colaborador</h3>
+          <form onSubmit={onAddTeamMember}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Nombre Completo</label>
+                <input name="nombre" placeholder="Ej. Lic. Ricardo Silva" required className="glass-card" style={{ padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Correo Electrónico</label>
+                <input name="correo" type="email" placeholder="adjunto@tuabogadoia.com" required className="glass-card" style={{ padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Teléfono de Contacto</label>
+                <input name="telefono" placeholder="+52 55..." className="glass-card" style={{ padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Rol en el Despacho</label>
+                <select name="rol" required className="glass-card" style={{ padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}>
+                  <option value="abogado">Socio / Abogado</option>
+                  <option value="especialista">Especialista Externo</option>
+                  <option value="asistente">Asistente Legal</option>
+                  <option value="paralegal">Pasante / Paralegal</option>
+                </select>
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+              <label style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Especialidad / Materia Base</label>
+              <input name="especialidad" placeholder="Ej. Litigio Penal, Corporativo, Familiar..." className="glass-card" style={{ padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }} />
+            </div>
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <button type="submit" className="btn-premium" style={{ flex: 1, padding: '14px' }}>Dar de Alta Miembro</button>
+              <button type="button" onClick={() => setShowNewTeamMember(false)} style={{ padding: '14px 24px', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', cursor: 'pointer' }}>Cancelar</button>
+            </div>
+          </form>
+        </div>
       )}
 
       {teamMembers.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '60px', color: 'var(--muted)' }}>
-          <p style={{ fontSize: '48px', marginBottom: '16px' }}>👥</p>
-          <p style={{ fontSize: '18px' }}>No hay miembros en el equipo</p>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}>
+          <span style={{ fontSize: '64px' }}>👥</span>
+          <p style={{ fontSize: '18px', marginTop: '20px' }}>Tu despacho aún no tiene otros colaboradores registrados.</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
+          gap: '24px',
+          overflowY: 'auto'
+        }}>
           {teamMembers.map((miembro: any) => (
-            <div key={miembro.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
-                <div style={{ width: '50px', height: '50px', background: 'var(--primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', color: 'var(--secondary)' }}>
+            <div key={miembro.id} className="glass-panel hover-lift" style={{ padding: '24px', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
+              <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '20px' }}>
+                <div style={{ 
+                  width: '60px', 
+                  height: '60px', 
+                  borderRadius: '16px', 
+                  background: 'var(--surface-opaque)', 
+                  border: '1.5px solid var(--primary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '28px',
+                  boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
+                }}>
                   {miembro.nombre.charAt(0)}
                 </div>
-                <button onClick={() => onDeleteTeamMember(miembro.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '18px' }}>🗑️</button>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ margin: 0, fontSize: '17px', color: '#fff', fontWeight: 700 }}>{miembro.nombre}</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#2ea043' }} />
+                    <span style={{ fontSize: '11px', color: 'var(--primary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      {miembro.rol}
+                    </span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => onDeleteTeamMember(miembro.id)}
+                  style={{ background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', opacity: 0.3 }}
+                  title="Eliminar miembro"
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.3'}
+                >
+                  🗑️
+                </button>
               </div>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>{miembro.nombre}</h3>
-              <p style={{ fontSize: '14px', color: 'var(--secondary)', marginBottom: '8px' }}>{miembro.rol} {miembro.especialidad && `• ${miembro.especialidad}`}</p>
-              <p style={{ fontSize: '13px', color: 'var(--muted)' }}>📧 {miembro.correo}</p>
-              <div style={{ marginTop: '12px' }}>
-                <button onClick={() => onShowCall(miembro.telefono)} style={{ width: '100%', padding: '8px', background: '#22c55e', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', color: '#fff' }}>📞 Llamar</button>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--text-muted)' }}>
+                  <span style={{ opacity: 0.6 }}>📧</span> {miembro.correo}
+                </div>
+                {miembro.especialidad && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--text-muted)' }}>
+                    <span style={{ opacity: 0.6 }}>🎓</span> {miembro.especialidad}
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button 
+                  onClick={() => onShowCall(miembro.telefono)}
+                  style={{ 
+                    flex: 1, 
+                    padding: '10px', 
+                    background: 'rgba(34, 197, 94, 0.1)', 
+                    color: '#22c55e', 
+                    border: '1px solid rgba(34, 197, 94, 0.2)',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  LLAMAR AHORA
+                </button>
+                <button 
+                  style={{ 
+                    flex: 1, 
+                    padding: '10px', 
+                    background: 'rgba(197, 160, 89, 0.1)', 
+                    color: 'var(--primary)', 
+                    border: '1px solid rgba(197, 160, 89, 0.2)',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  MENSAJE
+                </button>
               </div>
             </div>
           ))}

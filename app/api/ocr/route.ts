@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-export const dynamic = 'force-dynamic';
 import Tesseract from 'tesseract.js';
+import OpenAI from 'openai';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  
   try {
     const formData = await req.formData();
     const imageData = formData.get('image') as string;
@@ -11,14 +17,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No image provided' }, { status: 400 });
     }
 
-    const result = await Tesseract.recognize(imageData, 'spa', {
-      logger: m => console.log(m)
-    });
-
+    // 1. OCR Extraction (Tesseract)
+    const result = await Tesseract.recognize(imageData, 'spa');
     const text = result.data.text;
     
-    // Analyze the extracted text
-    const analysis = analyzeLegalText(text);
+    // 2. Deep Legal Audit (OpenAI)
+    const analysis = await analyzeLegalTextWithAI(text, openai);
     
     return NextResponse.json({
       success: true,
@@ -26,13 +30,53 @@ export async function POST(req: NextRequest) {
       analysis: analysis
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('OCR Error:', error);
-    return NextResponse.json(
-      { error: 'Error processing image' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Error processing document' }, { status: 500 });
   }
+}
+
+async function analyzeLegalTextWithAI(text: string, openai: OpenAI) {
+  try {
+    const systemPrompt = `Eres un Auditor Legal Senior especializado en derecho mexicano. 
+    Tu tarea es analizar el texto extraído de un documento legal y generar un informe de auditoría profundo.
+    
+    Detecta y extrae en formato JSON:
+    - detectedType: Tipo de documento (ej. Contrato Arrendamiento, Demanda Laboral).
+    - entities: { dates: [], amounts: [], names: [], addresses: [] }
+    - risks: Lista de riesgos detectados (ej. "Cláusula penal excesiva", "Falta de jurisdicción clara").
+    - keyClauses: Cláusulas críticas encontradas.
+    - summary: Resumen ejecutivo del documento.
+    - legalityScore: Puntuación de 1 a 100 sobre la solidez/riesgo del documento.
+    
+    Sé extremadamente profesional y minucioso. El texto puede tener errores de OCR, interprétalo con inteligencia.`;
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `Analiza este texto legal:\n\n${text}` }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.1,
+    });
+
+    return JSON.parse(response.choices[0].message.content || '{}');
+  } catch (err) {
+    console.error('AI Analysis failed, falling back to basic analysis:', err);
+    return fallbackAnalysis(text);
+  }
+}
+
+function fallbackAnalysis(text: string) {
+  // Basic Regex fallback if AI fails
+  return {
+    detectedType: text.toLowerCase().includes('contrato') ? 'Contrato' : 'Documento General',
+    entities: { dates: [], amounts: [], names: [], addresses: [] },
+    risks: ['Error en auditoría IA - Análisis básico aplicado'],
+    summary: 'No se pudo realizar el análisis por IA. Se detectó texto base.',
+    legalityScore: 50
+  };
 }
 
 function analyzeLegalText(text: string) {

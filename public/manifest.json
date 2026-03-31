@@ -1,7 +1,7 @@
 {
-  "name": "LexMex - Asesor Legal Inteligente",
-  "short_name": "LexMex",
-  "description": "Tu bufete de abogados virtual - Advisor legal con IA para México",
+  "name": "TuAbogadoIA - Asesor Legal Inteligente",
+  "short_name": "TuAbogadoIA",
+  "description": "Tu bufete de abogados virtual con IA para México",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",

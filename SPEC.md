@@ -1,8 +1,8 @@
-# LexMex - Asesor Legal Inteligente
+# TuAbogadoIA - Asesor Legal Inteligente
 
 ## 1. Project Overview
 
-- **Project name**: LexMex
+- **Project name**: TuAbogadoIA
 - **Type**: Web application (Chatbot + Base de datos consultable)
 - **Core functionality**: Asesor legal experto en derecho mexicano con chatbot conversacional y biblioteca de consultas normativas
 - **Target users**: Abogados, estudiantes de derecho, ciudadanos buscando asesoría legal

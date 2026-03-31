@@ -176,7 +176,7 @@ function generarContrato(doc: jsPDF, datos: any, pageWidth: number) {
   
   y += 30;
   doc.setFontSize(8);
-  doc.text('Documento generado por LexMex - Asesor Legal Inteligente', pageWidth / 2, y, { align: 'center' });
+  doc.text('Documento generado por TuAbogadoIA - Asesor Legal Inteligente', pageWidth / 2, y, { align: 'center' });
 }
 
 function generarEscrito(doc: jsPDF, datos: any, pageWidth: number) {

@@ -1,0 +1,1305 @@
+
+> lexmex@1.0.0 build
+> next build
+
+  Ôû▓ Next.js 14.2.15
+  - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+Failed to compile.
+
+./app/page.tsx
+Error: 
+  x the name `searchTerm` is defined multiple times
+     ,-[C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\app\page.tsx:149:1]
+ 149 |   // Estados para Biblioteca Legal
+ 150 |   const [activeSubTab, setActiveSubTab] = useState<'leyes' | 'jurisprudencia' | 'doctrina'>('leyes');
+ 151 |   const [materiaFilter, setMateriaFilter] = useState('todas');
+ 152 |   const [searchTerm, setSearchTerm] = useState('');
+     :          ^^^^^|^^^^
+     :               `-- previous definition of `searchTerm` here
+ 153 |   
+ 154 |   // Helpers de Notificaci├│n
+ 155 |   const addNotification = (notif: any) => {
+ 156 |     setNotifications(prev => [notif, ...prev].slice(0, 20));
+ 157 |     // Push Notification si hay permiso
+ 158 |     if (Notification.permission === 'granted') {
+ 159 |       new Notification(notif.title, { body: notif.message, icon: '/favicon.ico' });
+ 160 |     }
+ 161 |   };
+ 162 | 
+ 163 |   // Monitor de Vencimientos (Deadline Sentry)
+ 164 |   useEffect(() => {
+ 165 |     if (!mounted || casos.length === 0) return;
+ 166 |     
+ 167 |     const proximos = getPlazosProximos();
+ 168 |     const urgentes = proximos.filter((p: any) => p.dias <= 3);
+ 169 |     
+ 170 |     if (urgentes.length > 0) {
+ 171 |       addNotification({
+ 172 |         title: 'ÔÜá´©Å Vencimientos Urgentes',
+ 173 |         message: `Tienes ${urgentes.length} plazos legales que vencen en menos de 72 horas.`,
+ 174 |         isUrgent: true,
+ 175 |         icon: 'ÔÜû´©Å',
+ 176 |         time: 'Sistema'
+ 177 |       });
+ 178 |     }
+ 179 |   }, [mounted, casos]);
+ 180 |   const [loginPassword, setLoginPassword] = useState('');
+ 181 |   const [showLoginError, setShowLoginError] = useState(false);
+ 182 |   const [showEmailModal, setShowEmailModal] = useState(false);
+ 183 |   const [showCallModal, setShowCallModal] = useState(false);
+ 184 |   const [showDueDiligence, setShowDueDiligence] = useState(false);
+ 185 |   const [dueDiligenceResult, setDueDiligenceResult] = useState<any>(null);
+ 186 |   const [isCheckingDD, setIsCheckingDD] = useState(false);
+ 187 |   const [ddForm, setDdForm] = useState({ rfc: '', curp: '', nombre: '', tipo: 'persona-moral' });
+ 188 |   const [callStatus, setCallStatus] = useState<'idle' | 'calling' | 'connected' | 'ended'>('idle');
+ 189 |   const [callDuration, setCallDuration] = useState(0);
+ 190 |   const [currentCallNumber, setCurrentCallNumber] = useState('');
+ 191 |   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
+ 192 |   const [emailTo, setEmailTo] = useState('');
+ 193 |   const [emailSubject, setEmailSubject] = useState('');
+ 194 |   const [emailBody, setEmailBody] = useState('');
+ 195 |   const [hasPassword, setHasPassword] = useState<boolean | null>(null);
+ 196 | 
+ 197 |   const onSendTeamMessage = async (contenido: string) => {
+ 198 |     if (!mounted || teamMembers.length === 0) return;
+ 199 |     try {
+ 200 |       // Usar el primer miembro del equipo como autor (en un sistema real ser├¡a el usuario logueado)
+ 201 |       const autorId = teamMembers[0].id;
+ 202 |       const { error } = await supabase.from('equipo_mensajes').insert([{
+ 203 |         autor_id: autorId,
+ 204 |         contenido
+ 205 |       }]);
+ 206 |       if (error) throw error;
+ 207 |     } catch (error) {
+ 208 |       console.error('Error sending team message:', error);
+ 209 |       showToast('Error al enviar mensaje', 'error');
+ 210 |     }
+ 211 |   };
+ 212 | 
+ 213 |   useEffect(() => {
+ 214 |     setMounted(true);
+ 215 |     setHasPassword(!!localStorage.getItem('lexmex_password'));
+ 216 |   }, []);
+ 217 | 
+ 218 |   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+ 219 |     setToast({ message, type });
+ 220 |     setTimeout(() => setToast(null), 3000);
+ 221 |   };
+ 222 | 
+ 223 |   // Datos de ejemplo
+ 224 |   const loadSampleData = () => {
+ 225 |     const sampleClientes = [
+ 226 |       { id: '1', nombre: 'Mar├¡a Gonz├ílez L├│pez', correo: 'maria.gonzalez@email.com', telefono: '55 1234 5678', direccion: 'Av. Reforma 123, CDMX', rfc: 'GOLM800101ABC', fechaAlta: new Date().toISOString(), notas: 'Cliente preferente' },
+ 227 |       { id: '2', nombre: 'Juan P├®rez Hern├índez', correo: 'juan.perez@email.com', telefono: '55 8765 4321', direccion: 'Calle Ju├írez 456, Guadalajara', rfc: 'PEHJ750202DEF', fechaAlta: new Date().toISOString(), notas: '' },
+ 228 |     ];
+ 229 |     
+ 230 |     const sampleCasos = [
+ 231 |       { id: '1', clienteId: '1', titulo: 'Demanda de divorcio necesario', materia: 'familiar', status: 'activo', descripcion: 'Procedimiento de divorcio por causa de adulterio', fechaApertura: new Date().toISOString(), consultas: [], documentos: [], plazos: [{id: '1', casoId: '1', descripcion: 'Presenter pruebas', fechaLimite: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], estado: 'pendiente'}], eventos: [], facturas: [{id: '1', casoId: '1', numero: 'FAC-001', concepto: 'Honorarios etapa 1', total: 25000, fecha: new Date().toISOString(), status: 'pagada'}] },
+ 232 |     ];
+ 233 | 
+ 234 |     const sampleProspectos = [
+ 235 |       { id: '1', nombre: 'Carlos Ruiz D├¡az', correo: 'carlos.ruiz@email.com', telefono: '55 3333 4444', motivo: 'Consulta por compra de propiedad', fuente: 'google', status: 'interesado', fecha: new Date().toISOString(), notas: 'Muy interesado' },
+ 236 |     ];
+ 237 |     
+ 238 |     setClientes(sampleClientes);
+ 239 |     setCasos(sampleCasos);
+ 240 |     setProspectos(sampleProspectos);
+ 241 |     showToast('┬íDatos de ejemplo cargados!', 'success');
+ 242 |   };
+ 243 | 
+ 244 |   const loadSamples = () => {
+ 245 |     loadSampleData();
+ 246 |   };
+ 247 | 
+ 248 |   // Funciones de Sincronizaci├│n con Supabase (RESTORED)
+ 249 |   const fetchData = async () => {
+ 250 |     if (!mounted) return;
+ 251 |     setIsSaving(true);
+ 252 |     try {
+ 253 |       const { data: clientesData } = await supabase.from('clientes').select('*').order('nombre');
+ 254 |       const { data: casosData } = await supabase.from('casos').select('*, plazos(*), eventos(*), facturas(*), documentos(*), consultas(*)');
+ 255 |       const { data: prospectosData } = await supabase.from('prospectos').select('*').order('fecha', { ascending: false });
+ 256 |       const { data: citasData } = await supabase.from('citas').select('*');
+ 257 |       const { data: equipoData } = await supabase.from('equipo').select('*');
+ 258 |       const { data: mensajesData } = await supabase.from('equipo_mensajes').select('*').order('creado_at', { ascending: true }).limit(100);
+ 259 | 
+ 260 |       if (clientesData) setClientes(clientesData);
+ 261 |       if (casosData) setCasos(casosData);
+ 262 |       if (prospectosData) setProspectos(prospectosData);
+ 263 |       if (citasData) setCitas(citasData);
+ 264 |       if (equipoData) setTeamMembers(equipoData);
+ 265 |       if (mensajesData) setEquipoMensajes(mensajesData);
+ 266 |       
+ 267 |       showToast('Sincronizaci├│n Premium Exitosa', 'success');
+ 268 |     } catch (error) {
+ 269 |       console.error('Error fetching data:', error);
+ 270 |       showToast('Error de conexi├│n con la nube', 'error');
+ 271 |     } finally {
+ 272 |       setIsSaving(false);
+ 273 |     }
+ 274 |   };
+ 275 | 
+ 276 |   // Cargar desde Supabase al inicio
+ 277 |   useEffect(() => {
+ 278 |     if (mounted) {
+ 279 |       fetchData();
+ 280 |     }
+ 281 |   }, [mounted]);
+ 282 |   
+ 283 |   const [realtimeStatus, setRealtimeStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
+ 284 | 
+ 285 |   // L├│gica de Almacenamiento (SUPABASE STORAGE)
+ 286 |   const handleUploadDocument = async (e: React.ChangeEvent<HTMLInputElement>, casoId: string) => {
+ 287 |     const file = e.target.files?.[0];
+ 288 |     if (!file || !casoId) return;
+ 289 | 
+ 290 |     setIsSaving(true);
+ 291 |     try {
+ 292 |       const fileExt = file.name.split('.').pop();
+ 293 |       const fileName = `${casoId}/${Math.random()}.${fileExt}`;
+ 294 |       const filePath = `${fileName}`;
+ 295 | 
+ 296 |       // 1. Subir a Storage
+ 297 |       const { error: uploadError } = await supabase.storage
+ 298 |         .from('documentos')
+ 299 |         .upload(filePath, file);
+ 300 | 
+ 301 |       if (uploadError) throw uploadError;
+ 302 | 
+ 303 |       // 2. Registrar en la BD
+ 304 |       const { error: dbError } = await supabase
+ 305 |         .from('documentos')
+ 306 |         .insert([{ 
+ 307 |           caso_id: casoId, 
+ 308 |           nombre: file.name, 
+ 309 |           tipo: fileExt || 'otro', 
+ 310 |           url: filePath,
+ 311 |           fecha: new Date().toISOString() 
+ 312 |         }]);
+ 313 | 
+ 314 |       if (dbError) throw dbError;
+ 315 | 
+ 316 |       showToast('Documento subido a la nube', 'success');
+ 317 |       fetchData(); // Recargar datos para ver el nuevo doc
+ 318 |     } catch (error) {
+ 319 |       console.error('Error uploading:', error);
+ 320 |       showToast('Error al subir documento', 'error');
+ 321 |     } finally {
+ 322 |       setIsSaving(false);
+ 323 |     }
+ 324 |   };
+ 325 |   const generatePortalLink = async (casoId: string) => {
+ 326 |     // Generar un token ├║nico (simulado)
+ 327 |     const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+ 328 |     const origin = typeof window !== 'undefined' ? window.location.origin : '';
+ 329 |     return `${origin}/portal/${token}`;
+ 330 |   };
+ 331 | 
+ 332 |   const handleSignDocument = async (casoId: string, docId: string, signatureData: string) => {
+ 333 |     try {
+ 334 |       setCasos(prev => prev.map(c => {
+ 335 |         if (c.id === casoId) {
+ 336 |           return {
+ 337 |             ...c,
+ 338 |             documentos: c.documentos.map((d: any) => 
+ 339 |               d.id === docId ? { ...d, firmado: true, firmaData: signatureData, fechaFirma: new Date().toISOString() } : d
+ 340 |             )
+ 341 |           };
+ 342 |         }
+ 343 |         return c;
+ 344 |       }));
+ 345 |       showToast('Documento firmado con ├®xito', 'success');
+ 346 |     } catch (err) {
+ 347 |        console.error('Error al firmar:', err);
+ 348 |     }
+ 349 |   };
+ 350 | 
+ 351 |   
+ 352 |   // Motor de Tiempo Real (SUPABASE REALTIME)
+ 353 |   useEffect(() => {
+ 354 |     if (!mounted) return;
+ 355 | 
+ 356 |     const channel = supabase
+ 357 |       .channel('despacho_delta')
+ 358 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'clientes' }, () => fetchData())
+ 359 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'casos' }, () => fetchData())
+ 360 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'prospectos' }, () => fetchData())
+ 361 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'citas' }, () => fetchData())
+ 362 |       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'equipo_mensajes' }, (payload) => {
+ 363 |         setEquipoMensajes(prev => [...prev, payload.new]);
+ 364 |         // Alerta visual si no estamos en el chat
+ 365 |         if (activeTab !== 'teamChat') {
+ 366 |           addNotification({
+ 367 |             title: 'Mensaje de Equipo',
+ 368 |             message: payload.new.contenido,
+ 369 |             icon: '­ƒÆ¼',
+ 370 |             time: 'Ahora'
+ 371 |           });
+ 372 |         }
+ 373 |       })
+ 374 |       .subscribe((status) => {
+ 375 |         if (status === 'SUBSCRIBED') setRealtimeStatus('connected');
+ 376 |         if (status === 'CLOSED' || status === 'CHANNEL_ERROR') setRealtimeStatus('error');
+ 377 |       });
+ 378 | 
+ 379 |     return () => {
+ 380 |       supabase.removeChannel(channel);
+ 381 |     };
+ 382 |   }, [mounted]);
+ 383 | 
+ 384 |   // Mantener respaldo local (opcional)
+ 385 |   useEffect(() => {
+ 386 |     if (!mounted) return;
+ 387 |     localStorage.setItem('lexmex_clientes', JSON.stringify(clientes));
+ 388 |     localStorage.setItem('lexmex_casos', JSON.stringify(casos));
+ 389 |     localStorage.setItem('lexmex_prospectos', JSON.stringify(prospectos));
+ 390 |     localStorage.setItem('lexmex_citas', JSON.stringify(citas));
+ 391 |   }, [clientes, casos, prospectos, citas, mounted]);
+ 392 |   
+ 393 |   const welcomeMessageEs = `┬íBienvenido a TuAbogadoIA! ÔÜû´©Å
+ 394 | 
+ 395 | Soy tu asistente legal de **Alta Fidelidad** especializado en el sistema jur├¡dico mexicano. Mi arquitectura me permite ofrecerte:
+ 396 | 
+ 397 | ­ƒôï **An├ílisis y Dictaminaci├│n**
+ 398 | Revisi├│n t├®cnica de contratos, demandas y amparos con detecci├│n de riesgos procesales.
+ 399 | 
+ 400 | ­ƒôÜ **Investigaci├│n Jur├¡dica Din├ímica**
+ 401 | B├║squeda en tiempo real de Leyes Federales, Locales y Criterios Jurisprudenciales actualizados.
+ 402 | 
+ 403 | ­ƒÅó **Centro de Control Jur├¡dico**
+ 404 | Gesti├│n integrada de tu despacho: **Casos (${casos.length})**, **Prospectos (${prospectos.length})** y **Citas (${citas.length})** pendientes.
+ 405 | 
+ 406 | **┬┐Qu├® asunto legal revisamos hoy, Licenciado?**`;
+ 407 | 
+ 408 |   const welcomeMessageEn = `Welcome to TuAbogadoIA! ÔÜû´©Å
+ 409 | 
+ 410 | I am your legal AI assistant specialized in Mexican law. I am capable of:
+ 411 | 
+ 412 | ­ƒôï **Document Analysis**
+ 413 | I analyze lawsuits, responses, motions, and court rulings.
+ 414 | 
+ 415 | Ô£ì´©Å **Legal Drafting**
+ 416 | I prepare lawsuit responses, appeals, briefs, and legal documents.
+ 417 | 
+ 418 | ÔÜû´©Å **Ruling Analysis**
+ 419 | I examine sentences to find legal errors and appeal opportunities.
+ 420 | 
+ 421 | ­ƒôÜ **Precedent Search**
+ 422 | I locate relevant case law and theses.
+ 423 | 
+ 424 | ­ƒöì **Notarial Review**
+ 425 | I review deed projects and perform Due Diligence.
+ 426 | 
+ 427 | ­ƒô£ **Civil and Commercial Contracts**
+ 428 | I draft any type of contract.
+ 429 | 
+ 430 | ­ƒÆí You can also paste URLs from official sources (DOF, SCJN, etc.) for analysis.
+ 431 | 
+ 432 | How can I help you today?`;
+ 433 | 
+ 434 |   const [messages, setMessages] = useState<Message[]>([
+ 435 |     { role: 'assistant', content: welcomeMessageEs }
+ 436 |   ]);
+ 437 | 
+ 438 |   useEffect(() => {
+ 439 |     if (messages.length === 1 && messages[0].role === 'assistant') {
+ 440 |       setMessages([{ role: 'assistant', content: language === 'es' ? welcomeMessageEs : welcomeMessageEn }]);
+ 441 |     }
+ 442 |   }, [language]);
+ 443 |   const [input, setInput] = useState('');
+ 444 |   const [isLoading, setIsLoading] = useState(false);
+ 445 |   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+ 446 |   const [isRecording, setIsRecording] = useState(false);
+ 447 |   const [useWebSearch, setUseWebSearch] = useState(false);
+ 448 |   const [ocrResult, setOcrResult] = useState<any>(null);
+ 449 |   const [isAnalyzing, setIsAnalyzing] = useState(false);
+ 450 |   const [isSearchingWeb, setIsSearchingWeb] = useState(false);
+ 451 |   const [analysisResult, setAnalysisResult] = useState<any>(null);
+ 452 |   const [showAnalysis, setShowAnalysis] = useState(false);
+ 453 |   const [showOcr, setShowOcr] = useState(false);
+ 454 |   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | null>(null);
+ 455 |   const [equipoMensajes, setEquipoMensajes] = useState<any[]>([]);
+ 456 |   const [notifications, setNotifications] = useState<any[]>([]);
+ 457 |   const [showNotifications, setShowNotifications] = useState(false);
+ 458 |   const [searchTerm, setSearchTerm] = useState('');
+     :          ^^^^^|^^^^
+     :               `-- `searchTerm` redefined here
+ 459 |   const [materiaFilter, setMateriaFilter] = useState('');
+ 460 |   const [selectedLey, setSelectedLey] = useState<Ley | null>(null);
+ 460 |   const [selectedArticulo, setSelectedArticulo] = useState<Articulo | null>(null);
+     `----
+
+  x the name `setSearchTerm` is defined multiple times
+     ,-[C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\app\page.tsx:149:1]
+ 149 |   // Estados para Biblioteca Legal
+ 150 |   const [activeSubTab, setActiveSubTab] = useState<'leyes' | 'jurisprudencia' | 'doctrina'>('leyes');
+ 151 |   const [materiaFilter, setMateriaFilter] = useState('todas');
+ 152 |   const [searchTerm, setSearchTerm] = useState('');
+     :                      ^^^^^^|^^^^^^
+     :                            `-- previous definition of `setSearchTerm` here
+ 153 |   
+ 154 |   // Helpers de Notificaci├│n
+ 155 |   const addNotification = (notif: any) => {
+ 156 |     setNotifications(prev => [notif, ...prev].slice(0, 20));
+ 157 |     // Push Notification si hay permiso
+ 158 |     if (Notification.permission === 'granted') {
+ 159 |       new Notification(notif.title, { body: notif.message, icon: '/favicon.ico' });
+ 160 |     }
+ 161 |   };
+ 162 | 
+ 163 |   // Monitor de Vencimientos (Deadline Sentry)
+ 164 |   useEffect(() => {
+ 165 |     if (!mounted || casos.length === 0) return;
+ 166 |     
+ 167 |     const proximos = getPlazosProximos();
+ 168 |     const urgentes = proximos.filter((p: any) => p.dias <= 3);
+ 169 |     
+ 170 |     if (urgentes.length > 0) {
+ 171 |       addNotification({
+ 172 |         title: 'ÔÜá´©Å Vencimientos Urgentes',
+ 173 |         message: `Tienes ${urgentes.length} plazos legales que vencen en menos de 72 horas.`,
+ 174 |         isUrgent: true,
+ 175 |         icon: 'ÔÜû´©Å',
+ 176 |         time: 'Sistema'
+ 177 |       });
+ 178 |     }
+ 179 |   }, [mounted, casos]);
+ 180 |   const [loginPassword, setLoginPassword] = useState('');
+ 181 |   const [showLoginError, setShowLoginError] = useState(false);
+ 182 |   const [showEmailModal, setShowEmailModal] = useState(false);
+ 183 |   const [showCallModal, setShowCallModal] = useState(false);
+ 184 |   const [showDueDiligence, setShowDueDiligence] = useState(false);
+ 185 |   const [dueDiligenceResult, setDueDiligenceResult] = useState<any>(null);
+ 186 |   const [isCheckingDD, setIsCheckingDD] = useState(false);
+ 187 |   const [ddForm, setDdForm] = useState({ rfc: '', curp: '', nombre: '', tipo: 'persona-moral' });
+ 188 |   const [callStatus, setCallStatus] = useState<'idle' | 'calling' | 'connected' | 'ended'>('idle');
+ 189 |   const [callDuration, setCallDuration] = useState(0);
+ 190 |   const [currentCallNumber, setCurrentCallNumber] = useState('');
+ 191 |   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
+ 192 |   const [emailTo, setEmailTo] = useState('');
+ 193 |   const [emailSubject, setEmailSubject] = useState('');
+ 194 |   const [emailBody, setEmailBody] = useState('');
+ 195 |   const [hasPassword, setHasPassword] = useState<boolean | null>(null);
+ 196 | 
+ 197 |   const onSendTeamMessage = async (contenido: string) => {
+ 198 |     if (!mounted || teamMembers.length === 0) return;
+ 199 |     try {
+ 200 |       // Usar el primer miembro del equipo como autor (en un sistema real ser├¡a el usuario logueado)
+ 201 |       const autorId = teamMembers[0].id;
+ 202 |       const { error } = await supabase.from('equipo_mensajes').insert([{
+ 203 |         autor_id: autorId,
+ 204 |         contenido
+ 205 |       }]);
+ 206 |       if (error) throw error;
+ 207 |     } catch (error) {
+ 208 |       console.error('Error sending team message:', error);
+ 209 |       showToast('Error al enviar mensaje', 'error');
+ 210 |     }
+ 211 |   };
+ 212 | 
+ 213 |   useEffect(() => {
+ 214 |     setMounted(true);
+ 215 |     setHasPassword(!!localStorage.getItem('lexmex_password'));
+ 216 |   }, []);
+ 217 | 
+ 218 |   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+ 219 |     setToast({ message, type });
+ 220 |     setTimeout(() => setToast(null), 3000);
+ 221 |   };
+ 222 | 
+ 223 |   // Datos de ejemplo
+ 224 |   const loadSampleData = () => {
+ 225 |     const sampleClientes = [
+ 226 |       { id: '1', nombre: 'Mar├¡a Gonz├ílez L├│pez', correo: 'maria.gonzalez@email.com', telefono: '55 1234 5678', direccion: 'Av. Reforma 123, CDMX', rfc: 'GOLM800101ABC', fechaAlta: new Date().toISOString(), notas: 'Cliente preferente' },
+ 227 |       { id: '2', nombre: 'Juan P├®rez Hern├índez', correo: 'juan.perez@email.com', telefono: '55 8765 4321', direccion: 'Calle Ju├írez 456, Guadalajara', rfc: 'PEHJ750202DEF', fechaAlta: new Date().toISOString(), notas: '' },
+ 228 |     ];
+ 229 |     
+ 230 |     const sampleCasos = [
+ 231 |       { id: '1', clienteId: '1', titulo: 'Demanda de divorcio necesario', materia: 'familiar', status: 'activo', descripcion: 'Procedimiento de divorcio por causa de adulterio', fechaApertura: new Date().toISOString(), consultas: [], documentos: [], plazos: [{id: '1', casoId: '1', descripcion: 'Presenter pruebas', fechaLimite: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], estado: 'pendiente'}], eventos: [], facturas: [{id: '1', casoId: '1', numero: 'FAC-001', concepto: 'Honorarios etapa 1', total: 25000, fecha: new Date().toISOString(), status: 'pagada'}] },
+ 232 |     ];
+ 233 | 
+ 234 |     const sampleProspectos = [
+ 235 |       { id: '1', nombre: 'Carlos Ruiz D├¡az', correo: 'carlos.ruiz@email.com', telefono: '55 3333 4444', motivo: 'Consulta por compra de propiedad', fuente: 'google', status: 'interesado', fecha: new Date().toISOString(), notas: 'Muy interesado' },
+ 236 |     ];
+ 237 |     
+ 238 |     setClientes(sampleClientes);
+ 239 |     setCasos(sampleCasos);
+ 240 |     setProspectos(sampleProspectos);
+ 241 |     showToast('┬íDatos de ejemplo cargados!', 'success');
+ 242 |   };
+ 243 | 
+ 244 |   const loadSamples = () => {
+ 245 |     loadSampleData();
+ 246 |   };
+ 247 | 
+ 248 |   // Funciones de Sincronizaci├│n con Supabase (RESTORED)
+ 249 |   const fetchData = async () => {
+ 250 |     if (!mounted) return;
+ 251 |     setIsSaving(true);
+ 252 |     try {
+ 253 |       const { data: clientesData } = await supabase.from('clientes').select('*').order('nombre');
+ 254 |       const { data: casosData } = await supabase.from('casos').select('*, plazos(*), eventos(*), facturas(*), documentos(*), consultas(*)');
+ 255 |       const { data: prospectosData } = await supabase.from('prospectos').select('*').order('fecha', { ascending: false });
+ 256 |       const { data: citasData } = await supabase.from('citas').select('*');
+ 257 |       const { data: equipoData } = await supabase.from('equipo').select('*');
+ 258 |       const { data: mensajesData } = await supabase.from('equipo_mensajes').select('*').order('creado_at', { ascending: true }).limit(100);
+ 259 | 
+ 260 |       if (clientesData) setClientes(clientesData);
+ 261 |       if (casosData) setCasos(casosData);
+ 262 |       if (prospectosData) setProspectos(prospectosData);
+ 263 |       if (citasData) setCitas(citasData);
+ 264 |       if (equipoData) setTeamMembers(equipoData);
+ 265 |       if (mensajesData) setEquipoMensajes(mensajesData);
+ 266 |       
+ 267 |       showToast('Sincronizaci├│n Premium Exitosa', 'success');
+ 268 |     } catch (error) {
+ 269 |       console.error('Error fetching data:', error);
+ 270 |       showToast('Error de conexi├│n con la nube', 'error');
+ 271 |     } finally {
+ 272 |       setIsSaving(false);
+ 273 |     }
+ 274 |   };
+ 275 | 
+ 276 |   // Cargar desde Supabase al inicio
+ 277 |   useEffect(() => {
+ 278 |     if (mounted) {
+ 279 |       fetchData();
+ 280 |     }
+ 281 |   }, [mounted]);
+ 282 |   
+ 283 |   const [realtimeStatus, setRealtimeStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
+ 284 | 
+ 285 |   // L├│gica de Almacenamiento (SUPABASE STORAGE)
+ 286 |   const handleUploadDocument = async (e: React.ChangeEvent<HTMLInputElement>, casoId: string) => {
+ 287 |     const file = e.target.files?.[0];
+ 288 |     if (!file || !casoId) return;
+ 289 | 
+ 290 |     setIsSaving(true);
+ 291 |     try {
+ 292 |       const fileExt = file.name.split('.').pop();
+ 293 |       const fileName = `${casoId}/${Math.random()}.${fileExt}`;
+ 294 |       const filePath = `${fileName}`;
+ 295 | 
+ 296 |       // 1. Subir a Storage
+ 297 |       const { error: uploadError } = await supabase.storage
+ 298 |         .from('documentos')
+ 299 |         .upload(filePath, file);
+ 300 | 
+ 301 |       if (uploadError) throw uploadError;
+ 302 | 
+ 303 |       // 2. Registrar en la BD
+ 304 |       const { error: dbError } = await supabase
+ 305 |         .from('documentos')
+ 306 |         .insert([{ 
+ 307 |           caso_id: casoId, 
+ 308 |           nombre: file.name, 
+ 309 |           tipo: fileExt || 'otro', 
+ 310 |           url: filePath,
+ 311 |           fecha: new Date().toISOString() 
+ 312 |         }]);
+ 313 | 
+ 314 |       if (dbError) throw dbError;
+ 315 | 
+ 316 |       showToast('Documento subido a la nube', 'success');
+ 317 |       fetchData(); // Recargar datos para ver el nuevo doc
+ 318 |     } catch (error) {
+ 319 |       console.error('Error uploading:', error);
+ 320 |       showToast('Error al subir documento', 'error');
+ 321 |     } finally {
+ 322 |       setIsSaving(false);
+ 323 |     }
+ 324 |   };
+ 325 |   const generatePortalLink = async (casoId: string) => {
+ 326 |     // Generar un token ├║nico (simulado)
+ 327 |     const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+ 328 |     const origin = typeof window !== 'undefined' ? window.location.origin : '';
+ 329 |     return `${origin}/portal/${token}`;
+ 330 |   };
+ 331 | 
+ 332 |   const handleSignDocument = async (casoId: string, docId: string, signatureData: string) => {
+ 333 |     try {
+ 334 |       setCasos(prev => prev.map(c => {
+ 335 |         if (c.id === casoId) {
+ 336 |           return {
+ 337 |             ...c,
+ 338 |             documentos: c.documentos.map((d: any) => 
+ 339 |               d.id === docId ? { ...d, firmado: true, firmaData: signatureData, fechaFirma: new Date().toISOString() } : d
+ 340 |             )
+ 341 |           };
+ 342 |         }
+ 343 |         return c;
+ 344 |       }));
+ 345 |       showToast('Documento firmado con ├®xito', 'success');
+ 346 |     } catch (err) {
+ 347 |        console.error('Error al firmar:', err);
+ 348 |     }
+ 349 |   };
+ 350 | 
+ 351 |   
+ 352 |   // Motor de Tiempo Real (SUPABASE REALTIME)
+ 353 |   useEffect(() => {
+ 354 |     if (!mounted) return;
+ 355 | 
+ 356 |     const channel = supabase
+ 357 |       .channel('despacho_delta')
+ 358 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'clientes' }, () => fetchData())
+ 359 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'casos' }, () => fetchData())
+ 360 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'prospectos' }, () => fetchData())
+ 361 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'citas' }, () => fetchData())
+ 362 |       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'equipo_mensajes' }, (payload) => {
+ 363 |         setEquipoMensajes(prev => [...prev, payload.new]);
+ 364 |         // Alerta visual si no estamos en el chat
+ 365 |         if (activeTab !== 'teamChat') {
+ 366 |           addNotification({
+ 367 |             title: 'Mensaje de Equipo',
+ 368 |             message: payload.new.contenido,
+ 369 |             icon: '­ƒÆ¼',
+ 370 |             time: 'Ahora'
+ 371 |           });
+ 372 |         }
+ 373 |       })
+ 374 |       .subscribe((status) => {
+ 375 |         if (status === 'SUBSCRIBED') setRealtimeStatus('connected');
+ 376 |         if (status === 'CLOSED' || status === 'CHANNEL_ERROR') setRealtimeStatus('error');
+ 377 |       });
+ 378 | 
+ 379 |     return () => {
+ 380 |       supabase.removeChannel(channel);
+ 381 |     };
+ 382 |   }, [mounted]);
+ 383 | 
+ 384 |   // Mantener respaldo local (opcional)
+ 385 |   useEffect(() => {
+ 386 |     if (!mounted) return;
+ 387 |     localStorage.setItem('lexmex_clientes', JSON.stringify(clientes));
+ 388 |     localStorage.setItem('lexmex_casos', JSON.stringify(casos));
+ 389 |     localStorage.setItem('lexmex_prospectos', JSON.stringify(prospectos));
+ 390 |     localStorage.setItem('lexmex_citas', JSON.stringify(citas));
+ 391 |   }, [clientes, casos, prospectos, citas, mounted]);
+ 392 |   
+ 393 |   const welcomeMessageEs = `┬íBienvenido a TuAbogadoIA! ÔÜû´©Å
+ 394 | 
+ 395 | Soy tu asistente legal de **Alta Fidelidad** especializado en el sistema jur├¡dico mexicano. Mi arquitectura me permite ofrecerte:
+ 396 | 
+ 397 | ­ƒôï **An├ílisis y Dictaminaci├│n**
+ 398 | Revisi├│n t├®cnica de contratos, demandas y amparos con detecci├│n de riesgos procesales.
+ 399 | 
+ 400 | ­ƒôÜ **Investigaci├│n Jur├¡dica Din├ímica**
+ 401 | B├║squeda en tiempo real de Leyes Federales, Locales y Criterios Jurisprudenciales actualizados.
+ 402 | 
+ 403 | ­ƒÅó **Centro de Control Jur├¡dico**
+ 404 | Gesti├│n integrada de tu despacho: **Casos (${casos.length})**, **Prospectos (${prospectos.length})** y **Citas (${citas.length})** pendientes.
+ 405 | 
+ 406 | **┬┐Qu├® asunto legal revisamos hoy, Licenciado?**`;
+ 407 | 
+ 408 |   const welcomeMessageEn = `Welcome to TuAbogadoIA! ÔÜû´©Å
+ 409 | 
+ 410 | I am your legal AI assistant specialized in Mexican law. I am capable of:
+ 411 | 
+ 412 | ­ƒôï **Document Analysis**
+ 413 | I analyze lawsuits, responses, motions, and court rulings.
+ 414 | 
+ 415 | Ô£ì´©Å **Legal Drafting**
+ 416 | I prepare lawsuit responses, appeals, briefs, and legal documents.
+ 417 | 
+ 418 | ÔÜû´©Å **Ruling Analysis**
+ 419 | I examine sentences to find legal errors and appeal opportunities.
+ 420 | 
+ 421 | ­ƒôÜ **Precedent Search**
+ 422 | I locate relevant case law and theses.
+ 423 | 
+ 424 | ­ƒöì **Notarial Review**
+ 425 | I review deed projects and perform Due Diligence.
+ 426 | 
+ 427 | ­ƒô£ **Civil and Commercial Contracts**
+ 428 | I draft any type of contract.
+ 429 | 
+ 430 | ­ƒÆí You can also paste URLs from official sources (DOF, SCJN, etc.) for analysis.
+ 431 | 
+ 432 | How can I help you today?`;
+ 433 | 
+ 434 |   const [messages, setMessages] = useState<Message[]>([
+ 435 |     { role: 'assistant', content: welcomeMessageEs }
+ 436 |   ]);
+ 437 | 
+ 438 |   useEffect(() => {
+ 439 |     if (messages.length === 1 && messages[0].role === 'assistant') {
+ 440 |       setMessages([{ role: 'assistant', content: language === 'es' ? welcomeMessageEs : welcomeMessageEn }]);
+ 441 |     }
+ 442 |   }, [language]);
+ 443 |   const [input, setInput] = useState('');
+ 444 |   const [isLoading, setIsLoading] = useState(false);
+ 445 |   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+ 446 |   const [isRecording, setIsRecording] = useState(false);
+ 447 |   const [useWebSearch, setUseWebSearch] = useState(false);
+ 448 |   const [ocrResult, setOcrResult] = useState<any>(null);
+ 449 |   const [isAnalyzing, setIsAnalyzing] = useState(false);
+ 450 |   const [isSearchingWeb, setIsSearchingWeb] = useState(false);
+ 451 |   const [analysisResult, setAnalysisResult] = useState<any>(null);
+ 452 |   const [showAnalysis, setShowAnalysis] = useState(false);
+ 453 |   const [showOcr, setShowOcr] = useState(false);
+ 454 |   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | null>(null);
+ 455 |   const [equipoMensajes, setEquipoMensajes] = useState<any[]>([]);
+ 456 |   const [notifications, setNotifications] = useState<any[]>([]);
+ 457 |   const [showNotifications, setShowNotifications] = useState(false);
+ 458 |   const [searchTerm, setSearchTerm] = useState('');
+     :                      ^^^^^^|^^^^^^
+     :                            `-- `setSearchTerm` redefined here
+ 459 |   const [materiaFilter, setMateriaFilter] = useState('');
+ 460 |   const [selectedLey, setSelectedLey] = useState<Ley | null>(null);
+ 460 |   const [selectedArticulo, setSelectedArticulo] = useState<Articulo | null>(null);
+     `----
+
+  x the name `materiaFilter` is defined multiple times
+     ,-[C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\app\page.tsx:148:1]
+ 148 |   
+ 149 |   // Estados para Biblioteca Legal
+ 150 |   const [activeSubTab, setActiveSubTab] = useState<'leyes' | 'jurisprudencia' | 'doctrina'>('leyes');
+ 151 |   const [materiaFilter, setMateriaFilter] = useState('todas');
+     :          ^^^^^^|^^^^^^
+     :                `-- previous definition of `materiaFilter` here
+ 152 |   const [searchTerm, setSearchTerm] = useState('');
+ 153 |   
+ 154 |   // Helpers de Notificaci├│n
+ 155 |   const addNotification = (notif: any) => {
+ 156 |     setNotifications(prev => [notif, ...prev].slice(0, 20));
+ 157 |     // Push Notification si hay permiso
+ 158 |     if (Notification.permission === 'granted') {
+ 159 |       new Notification(notif.title, { body: notif.message, icon: '/favicon.ico' });
+ 160 |     }
+ 161 |   };
+ 162 | 
+ 163 |   // Monitor de Vencimientos (Deadline Sentry)
+ 164 |   useEffect(() => {
+ 165 |     if (!mounted || casos.length === 0) return;
+ 166 |     
+ 167 |     const proximos = getPlazosProximos();
+ 168 |     const urgentes = proximos.filter((p: any) => p.dias <= 3);
+ 169 |     
+ 170 |     if (urgentes.length > 0) {
+ 171 |       addNotification({
+ 172 |         title: 'ÔÜá´©Å Vencimientos Urgentes',
+ 173 |         message: `Tienes ${urgentes.length} plazos legales que vencen en menos de 72 horas.`,
+ 174 |         isUrgent: true,
+ 175 |         icon: 'ÔÜû´©Å',
+ 176 |         time: 'Sistema'
+ 177 |       });
+ 178 |     }
+ 179 |   }, [mounted, casos]);
+ 180 |   const [loginPassword, setLoginPassword] = useState('');
+ 181 |   const [showLoginError, setShowLoginError] = useState(false);
+ 182 |   const [showEmailModal, setShowEmailModal] = useState(false);
+ 183 |   const [showCallModal, setShowCallModal] = useState(false);
+ 184 |   const [showDueDiligence, setShowDueDiligence] = useState(false);
+ 185 |   const [dueDiligenceResult, setDueDiligenceResult] = useState<any>(null);
+ 186 |   const [isCheckingDD, setIsCheckingDD] = useState(false);
+ 187 |   const [ddForm, setDdForm] = useState({ rfc: '', curp: '', nombre: '', tipo: 'persona-moral' });
+ 188 |   const [callStatus, setCallStatus] = useState<'idle' | 'calling' | 'connected' | 'ended'>('idle');
+ 189 |   const [callDuration, setCallDuration] = useState(0);
+ 190 |   const [currentCallNumber, setCurrentCallNumber] = useState('');
+ 191 |   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
+ 192 |   const [emailTo, setEmailTo] = useState('');
+ 193 |   const [emailSubject, setEmailSubject] = useState('');
+ 194 |   const [emailBody, setEmailBody] = useState('');
+ 195 |   const [hasPassword, setHasPassword] = useState<boolean | null>(null);
+ 196 | 
+ 197 |   const onSendTeamMessage = async (contenido: string) => {
+ 198 |     if (!mounted || teamMembers.length === 0) return;
+ 199 |     try {
+ 200 |       // Usar el primer miembro del equipo como autor (en un sistema real ser├¡a el usuario logueado)
+ 201 |       const autorId = teamMembers[0].id;
+ 202 |       const { error } = await supabase.from('equipo_mensajes').insert([{
+ 203 |         autor_id: autorId,
+ 204 |         contenido
+ 205 |       }]);
+ 206 |       if (error) throw error;
+ 207 |     } catch (error) {
+ 208 |       console.error('Error sending team message:', error);
+ 209 |       showToast('Error al enviar mensaje', 'error');
+ 210 |     }
+ 211 |   };
+ 212 | 
+ 213 |   useEffect(() => {
+ 214 |     setMounted(true);
+ 215 |     setHasPassword(!!localStorage.getItem('lexmex_password'));
+ 216 |   }, []);
+ 217 | 
+ 218 |   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+ 219 |     setToast({ message, type });
+ 220 |     setTimeout(() => setToast(null), 3000);
+ 221 |   };
+ 222 | 
+ 223 |   // Datos de ejemplo
+ 224 |   const loadSampleData = () => {
+ 225 |     const sampleClientes = [
+ 226 |       { id: '1', nombre: 'Mar├¡a Gonz├ílez L├│pez', correo: 'maria.gonzalez@email.com', telefono: '55 1234 5678', direccion: 'Av. Reforma 123, CDMX', rfc: 'GOLM800101ABC', fechaAlta: new Date().toISOString(), notas: 'Cliente preferente' },
+ 227 |       { id: '2', nombre: 'Juan P├®rez Hern├índez', correo: 'juan.perez@email.com', telefono: '55 8765 4321', direccion: 'Calle Ju├írez 456, Guadalajara', rfc: 'PEHJ750202DEF', fechaAlta: new Date().toISOString(), notas: '' },
+ 228 |     ];
+ 229 |     
+ 230 |     const sampleCasos = [
+ 231 |       { id: '1', clienteId: '1', titulo: 'Demanda de divorcio necesario', materia: 'familiar', status: 'activo', descripcion: 'Procedimiento de divorcio por causa de adulterio', fechaApertura: new Date().toISOString(), consultas: [], documentos: [], plazos: [{id: '1', casoId: '1', descripcion: 'Presenter pruebas', fechaLimite: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], estado: 'pendiente'}], eventos: [], facturas: [{id: '1', casoId: '1', numero: 'FAC-001', concepto: 'Honorarios etapa 1', total: 25000, fecha: new Date().toISOString(), status: 'pagada'}] },
+ 232 |     ];
+ 233 | 
+ 234 |     const sampleProspectos = [
+ 235 |       { id: '1', nombre: 'Carlos Ruiz D├¡az', correo: 'carlos.ruiz@email.com', telefono: '55 3333 4444', motivo: 'Consulta por compra de propiedad', fuente: 'google', status: 'interesado', fecha: new Date().toISOString(), notas: 'Muy interesado' },
+ 236 |     ];
+ 237 |     
+ 238 |     setClientes(sampleClientes);
+ 239 |     setCasos(sampleCasos);
+ 240 |     setProspectos(sampleProspectos);
+ 241 |     showToast('┬íDatos de ejemplo cargados!', 'success');
+ 242 |   };
+ 243 | 
+ 244 |   const loadSamples = () => {
+ 245 |     loadSampleData();
+ 246 |   };
+ 247 | 
+ 248 |   // Funciones de Sincronizaci├│n con Supabase (RESTORED)
+ 249 |   const fetchData = async () => {
+ 250 |     if (!mounted) return;
+ 251 |     setIsSaving(true);
+ 252 |     try {
+ 253 |       const { data: clientesData } = await supabase.from('clientes').select('*').order('nombre');
+ 254 |       const { data: casosData } = await supabase.from('casos').select('*, plazos(*), eventos(*), facturas(*), documentos(*), consultas(*)');
+ 255 |       const { data: prospectosData } = await supabase.from('prospectos').select('*').order('fecha', { ascending: false });
+ 256 |       const { data: citasData } = await supabase.from('citas').select('*');
+ 257 |       const { data: equipoData } = await supabase.from('equipo').select('*');
+ 258 |       const { data: mensajesData } = await supabase.from('equipo_mensajes').select('*').order('creado_at', { ascending: true }).limit(100);
+ 259 | 
+ 260 |       if (clientesData) setClientes(clientesData);
+ 261 |       if (casosData) setCasos(casosData);
+ 262 |       if (prospectosData) setProspectos(prospectosData);
+ 263 |       if (citasData) setCitas(citasData);
+ 264 |       if (equipoData) setTeamMembers(equipoData);
+ 265 |       if (mensajesData) setEquipoMensajes(mensajesData);
+ 266 |       
+ 267 |       showToast('Sincronizaci├│n Premium Exitosa', 'success');
+ 268 |     } catch (error) {
+ 269 |       console.error('Error fetching data:', error);
+ 270 |       showToast('Error de conexi├│n con la nube', 'error');
+ 271 |     } finally {
+ 272 |       setIsSaving(false);
+ 273 |     }
+ 274 |   };
+ 275 | 
+ 276 |   // Cargar desde Supabase al inicio
+ 277 |   useEffect(() => {
+ 278 |     if (mounted) {
+ 279 |       fetchData();
+ 280 |     }
+ 281 |   }, [mounted]);
+ 282 |   
+ 283 |   const [realtimeStatus, setRealtimeStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
+ 284 | 
+ 285 |   // L├│gica de Almacenamiento (SUPABASE STORAGE)
+ 286 |   const handleUploadDocument = async (e: React.ChangeEvent<HTMLInputElement>, casoId: string) => {
+ 287 |     const file = e.target.files?.[0];
+ 288 |     if (!file || !casoId) return;
+ 289 | 
+ 290 |     setIsSaving(true);
+ 291 |     try {
+ 292 |       const fileExt = file.name.split('.').pop();
+ 293 |       const fileName = `${casoId}/${Math.random()}.${fileExt}`;
+ 294 |       const filePath = `${fileName}`;
+ 295 | 
+ 296 |       // 1. Subir a Storage
+ 297 |       const { error: uploadError } = await supabase.storage
+ 298 |         .from('documentos')
+ 299 |         .upload(filePath, file);
+ 300 | 
+ 301 |       if (uploadError) throw uploadError;
+ 302 | 
+ 303 |       // 2. Registrar en la BD
+ 304 |       const { error: dbError } = await supabase
+ 305 |         .from('documentos')
+ 306 |         .insert([{ 
+ 307 |           caso_id: casoId, 
+ 308 |           nombre: file.name, 
+ 309 |           tipo: fileExt || 'otro', 
+ 310 |           url: filePath,
+ 311 |           fecha: new Date().toISOString() 
+ 312 |         }]);
+ 313 | 
+ 314 |       if (dbError) throw dbError;
+ 315 | 
+ 316 |       showToast('Documento subido a la nube', 'success');
+ 317 |       fetchData(); // Recargar datos para ver el nuevo doc
+ 318 |     } catch (error) {
+ 319 |       console.error('Error uploading:', error);
+ 320 |       showToast('Error al subir documento', 'error');
+ 321 |     } finally {
+ 322 |       setIsSaving(false);
+ 323 |     }
+ 324 |   };
+ 325 |   const generatePortalLink = async (casoId: string) => {
+ 326 |     // Generar un token ├║nico (simulado)
+ 327 |     const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+ 328 |     const origin = typeof window !== 'undefined' ? window.location.origin : '';
+ 329 |     return `${origin}/portal/${token}`;
+ 330 |   };
+ 331 | 
+ 332 |   const handleSignDocument = async (casoId: string, docId: string, signatureData: string) => {
+ 333 |     try {
+ 334 |       setCasos(prev => prev.map(c => {
+ 335 |         if (c.id === casoId) {
+ 336 |           return {
+ 337 |             ...c,
+ 338 |             documentos: c.documentos.map((d: any) => 
+ 339 |               d.id === docId ? { ...d, firmado: true, firmaData: signatureData, fechaFirma: new Date().toISOString() } : d
+ 340 |             )
+ 341 |           };
+ 342 |         }
+ 343 |         return c;
+ 344 |       }));
+ 345 |       showToast('Documento firmado con ├®xito', 'success');
+ 346 |     } catch (err) {
+ 347 |        console.error('Error al firmar:', err);
+ 348 |     }
+ 349 |   };
+ 350 | 
+ 351 |   
+ 352 |   // Motor de Tiempo Real (SUPABASE REALTIME)
+ 353 |   useEffect(() => {
+ 354 |     if (!mounted) return;
+ 355 | 
+ 356 |     const channel = supabase
+ 357 |       .channel('despacho_delta')
+ 358 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'clientes' }, () => fetchData())
+ 359 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'casos' }, () => fetchData())
+ 360 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'prospectos' }, () => fetchData())
+ 361 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'citas' }, () => fetchData())
+ 362 |       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'equipo_mensajes' }, (payload) => {
+ 363 |         setEquipoMensajes(prev => [...prev, payload.new]);
+ 364 |         // Alerta visual si no estamos en el chat
+ 365 |         if (activeTab !== 'teamChat') {
+ 366 |           addNotification({
+ 367 |             title: 'Mensaje de Equipo',
+ 368 |             message: payload.new.contenido,
+ 369 |             icon: '­ƒÆ¼',
+ 370 |             time: 'Ahora'
+ 371 |           });
+ 372 |         }
+ 373 |       })
+ 374 |       .subscribe((status) => {
+ 375 |         if (status === 'SUBSCRIBED') setRealtimeStatus('connected');
+ 376 |         if (status === 'CLOSED' || status === 'CHANNEL_ERROR') setRealtimeStatus('error');
+ 377 |       });
+ 378 | 
+ 379 |     return () => {
+ 380 |       supabase.removeChannel(channel);
+ 381 |     };
+ 382 |   }, [mounted]);
+ 383 | 
+ 384 |   // Mantener respaldo local (opcional)
+ 385 |   useEffect(() => {
+ 386 |     if (!mounted) return;
+ 387 |     localStorage.setItem('lexmex_clientes', JSON.stringify(clientes));
+ 388 |     localStorage.setItem('lexmex_casos', JSON.stringify(casos));
+ 389 |     localStorage.setItem('lexmex_prospectos', JSON.stringify(prospectos));
+ 390 |     localStorage.setItem('lexmex_citas', JSON.stringify(citas));
+ 391 |   }, [clientes, casos, prospectos, citas, mounted]);
+ 392 |   
+ 393 |   const welcomeMessageEs = `┬íBienvenido a TuAbogadoIA! ÔÜû´©Å
+ 394 | 
+ 395 | Soy tu asistente legal de **Alta Fidelidad** especializado en el sistema jur├¡dico mexicano. Mi arquitectura me permite ofrecerte:
+ 396 | 
+ 397 | ­ƒôï **An├ílisis y Dictaminaci├│n**
+ 398 | Revisi├│n t├®cnica de contratos, demandas y amparos con detecci├│n de riesgos procesales.
+ 399 | 
+ 400 | ­ƒôÜ **Investigaci├│n Jur├¡dica Din├ímica**
+ 401 | B├║squeda en tiempo real de Leyes Federales, Locales y Criterios Jurisprudenciales actualizados.
+ 402 | 
+ 403 | ­ƒÅó **Centro de Control Jur├¡dico**
+ 404 | Gesti├│n integrada de tu despacho: **Casos (${casos.length})**, **Prospectos (${prospectos.length})** y **Citas (${citas.length})** pendientes.
+ 405 | 
+ 406 | **┬┐Qu├® asunto legal revisamos hoy, Licenciado?**`;
+ 407 | 
+ 408 |   const welcomeMessageEn = `Welcome to TuAbogadoIA! ÔÜû´©Å
+ 409 | 
+ 410 | I am your legal AI assistant specialized in Mexican law. I am capable of:
+ 411 | 
+ 412 | ­ƒôï **Document Analysis**
+ 413 | I analyze lawsuits, responses, motions, and court rulings.
+ 414 | 
+ 415 | Ô£ì´©Å **Legal Drafting**
+ 416 | I prepare lawsuit responses, appeals, briefs, and legal documents.
+ 417 | 
+ 418 | ÔÜû´©Å **Ruling Analysis**
+ 419 | I examine sentences to find legal errors and appeal opportunities.
+ 420 | 
+ 421 | ­ƒôÜ **Precedent Search**
+ 422 | I locate relevant case law and theses.
+ 423 | 
+ 424 | ­ƒöì **Notarial Review**
+ 425 | I review deed projects and perform Due Diligence.
+ 426 | 
+ 427 | ­ƒô£ **Civil and Commercial Contracts**
+ 428 | I draft any type of contract.
+ 429 | 
+ 430 | ­ƒÆí You can also paste URLs from official sources (DOF, SCJN, etc.) for analysis.
+ 431 | 
+ 432 | How can I help you today?`;
+ 433 | 
+ 434 |   const [messages, setMessages] = useState<Message[]>([
+ 435 |     { role: 'assistant', content: welcomeMessageEs }
+ 436 |   ]);
+ 437 | 
+ 438 |   useEffect(() => {
+ 439 |     if (messages.length === 1 && messages[0].role === 'assistant') {
+ 440 |       setMessages([{ role: 'assistant', content: language === 'es' ? welcomeMessageEs : welcomeMessageEn }]);
+ 441 |     }
+ 442 |   }, [language]);
+ 443 |   const [input, setInput] = useState('');
+ 444 |   const [isLoading, setIsLoading] = useState(false);
+ 445 |   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+ 446 |   const [isRecording, setIsRecording] = useState(false);
+ 447 |   const [useWebSearch, setUseWebSearch] = useState(false);
+ 448 |   const [ocrResult, setOcrResult] = useState<any>(null);
+ 449 |   const [isAnalyzing, setIsAnalyzing] = useState(false);
+ 450 |   const [isSearchingWeb, setIsSearchingWeb] = useState(false);
+ 451 |   const [analysisResult, setAnalysisResult] = useState<any>(null);
+ 452 |   const [showAnalysis, setShowAnalysis] = useState(false);
+ 453 |   const [showOcr, setShowOcr] = useState(false);
+ 454 |   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | null>(null);
+ 455 |   const [equipoMensajes, setEquipoMensajes] = useState<any[]>([]);
+ 456 |   const [notifications, setNotifications] = useState<any[]>([]);
+ 457 |   const [showNotifications, setShowNotifications] = useState(false);
+ 458 |   const [searchTerm, setSearchTerm] = useState('');
+ 459 |   const [materiaFilter, setMateriaFilter] = useState('');
+     :          ^^^^^^|^^^^^^
+     :                `-- `materiaFilter` redefined here
+ 460 |   const [selectedLey, setSelectedLey] = useState<Ley | null>(null);
+ 461 |   const [selectedArticulo, setSelectedArticulo] = useState<Articulo | null>(null);
+ 461 |   const [selectedJurisprudencia, setSelectedJurisprudencia] = useState<Jurisprudencia | null>(null);
+     `----
+
+  x the name `setMateriaFilter` is defined multiple times
+     ,-[C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\app\page.tsx:148:1]
+ 148 |   
+ 149 |   // Estados para Biblioteca Legal
+ 150 |   const [activeSubTab, setActiveSubTab] = useState<'leyes' | 'jurisprudencia' | 'doctrina'>('leyes');
+ 151 |   const [materiaFilter, setMateriaFilter] = useState('todas');
+     :                         ^^^^^^^^|^^^^^^^
+     :                                 `-- previous definition of `setMateriaFilter` here
+ 152 |   const [searchTerm, setSearchTerm] = useState('');
+ 153 |   
+ 154 |   // Helpers de Notificaci├│n
+ 155 |   const addNotification = (notif: any) => {
+ 156 |     setNotifications(prev => [notif, ...prev].slice(0, 20));
+ 157 |     // Push Notification si hay permiso
+ 158 |     if (Notification.permission === 'granted') {
+ 159 |       new Notification(notif.title, { body: notif.message, icon: '/favicon.ico' });
+ 160 |     }
+ 161 |   };
+ 162 | 
+ 163 |   // Monitor de Vencimientos (Deadline Sentry)
+ 164 |   useEffect(() => {
+ 165 |     if (!mounted || casos.length === 0) return;
+ 166 |     
+ 167 |     const proximos = getPlazosProximos();
+ 168 |     const urgentes = proximos.filter((p: any) => p.dias <= 3);
+ 169 |     
+ 170 |     if (urgentes.length > 0) {
+ 171 |       addNotification({
+ 172 |         title: 'ÔÜá´©Å Vencimientos Urgentes',
+ 173 |         message: `Tienes ${urgentes.length} plazos legales que vencen en menos de 72 horas.`,
+ 174 |         isUrgent: true,
+ 175 |         icon: 'ÔÜû´©Å',
+ 176 |         time: 'Sistema'
+ 177 |       });
+ 178 |     }
+ 179 |   }, [mounted, casos]);
+ 180 |   const [loginPassword, setLoginPassword] = useState('');
+ 181 |   const [showLoginError, setShowLoginError] = useState(false);
+ 182 |   const [showEmailModal, setShowEmailModal] = useState(false);
+ 183 |   const [showCallModal, setShowCallModal] = useState(false);
+ 184 |   const [showDueDiligence, setShowDueDiligence] = useState(false);
+ 185 |   const [dueDiligenceResult, setDueDiligenceResult] = useState<any>(null);
+ 186 |   const [isCheckingDD, setIsCheckingDD] = useState(false);
+ 187 |   const [ddForm, setDdForm] = useState({ rfc: '', curp: '', nombre: '', tipo: 'persona-moral' });
+ 188 |   const [callStatus, setCallStatus] = useState<'idle' | 'calling' | 'connected' | 'ended'>('idle');
+ 189 |   const [callDuration, setCallDuration] = useState(0);
+ 190 |   const [currentCallNumber, setCurrentCallNumber] = useState('');
+ 191 |   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
+ 192 |   const [emailTo, setEmailTo] = useState('');
+ 193 |   const [emailSubject, setEmailSubject] = useState('');
+ 194 |   const [emailBody, setEmailBody] = useState('');
+ 195 |   const [hasPassword, setHasPassword] = useState<boolean | null>(null);
+ 196 | 
+ 197 |   const onSendTeamMessage = async (contenido: string) => {
+ 198 |     if (!mounted || teamMembers.length === 0) return;
+ 199 |     try {
+ 200 |       // Usar el primer miembro del equipo como autor (en un sistema real ser├¡a el usuario logueado)
+ 201 |       const autorId = teamMembers[0].id;
+ 202 |       const { error } = await supabase.from('equipo_mensajes').insert([{
+ 203 |         autor_id: autorId,
+ 204 |         contenido
+ 205 |       }]);
+ 206 |       if (error) throw error;
+ 207 |     } catch (error) {
+ 208 |       console.error('Error sending team message:', error);
+ 209 |       showToast('Error al enviar mensaje', 'error');
+ 210 |     }
+ 211 |   };
+ 212 | 
+ 213 |   useEffect(() => {
+ 214 |     setMounted(true);
+ 215 |     setHasPassword(!!localStorage.getItem('lexmex_password'));
+ 216 |   }, []);
+ 217 | 
+ 218 |   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+ 219 |     setToast({ message, type });
+ 220 |     setTimeout(() => setToast(null), 3000);
+ 221 |   };
+ 222 | 
+ 223 |   // Datos de ejemplo
+ 224 |   const loadSampleData = () => {
+ 225 |     const sampleClientes = [
+ 226 |       { id: '1', nombre: 'Mar├¡a Gonz├ílez L├│pez', correo: 'maria.gonzalez@email.com', telefono: '55 1234 5678', direccion: 'Av. Reforma 123, CDMX', rfc: 'GOLM800101ABC', fechaAlta: new Date().toISOString(), notas: 'Cliente preferente' },
+ 227 |       { id: '2', nombre: 'Juan P├®rez Hern├índez', correo: 'juan.perez@email.com', telefono: '55 8765 4321', direccion: 'Calle Ju├írez 456, Guadalajara', rfc: 'PEHJ750202DEF', fechaAlta: new Date().toISOString(), notas: '' },
+ 228 |     ];
+ 229 |     
+ 230 |     const sampleCasos = [
+ 231 |       { id: '1', clienteId: '1', titulo: 'Demanda de divorcio necesario', materia: 'familiar', status: 'activo', descripcion: 'Procedimiento de divorcio por causa de adulterio', fechaApertura: new Date().toISOString(), consultas: [], documentos: [], plazos: [{id: '1', casoId: '1', descripcion: 'Presenter pruebas', fechaLimite: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], estado: 'pendiente'}], eventos: [], facturas: [{id: '1', casoId: '1', numero: 'FAC-001', concepto: 'Honorarios etapa 1', total: 25000, fecha: new Date().toISOString(), status: 'pagada'}] },
+ 232 |     ];
+ 233 | 
+ 234 |     const sampleProspectos = [
+ 235 |       { id: '1', nombre: 'Carlos Ruiz D├¡az', correo: 'carlos.ruiz@email.com', telefono: '55 3333 4444', motivo: 'Consulta por compra de propiedad', fuente: 'google', status: 'interesado', fecha: new Date().toISOString(), notas: 'Muy interesado' },
+ 236 |     ];
+ 237 |     
+ 238 |     setClientes(sampleClientes);
+ 239 |     setCasos(sampleCasos);
+ 240 |     setProspectos(sampleProspectos);
+ 241 |     showToast('┬íDatos de ejemplo cargados!', 'success');
+ 242 |   };
+ 243 | 
+ 244 |   const loadSamples = () => {
+ 245 |     loadSampleData();
+ 246 |   };
+ 247 | 
+ 248 |   // Funciones de Sincronizaci├│n con Supabase (RESTORED)
+ 249 |   const fetchData = async () => {
+ 250 |     if (!mounted) return;
+ 251 |     setIsSaving(true);
+ 252 |     try {
+ 253 |       const { data: clientesData } = await supabase.from('clientes').select('*').order('nombre');
+ 254 |       const { data: casosData } = await supabase.from('casos').select('*, plazos(*), eventos(*), facturas(*), documentos(*), consultas(*)');
+ 255 |       const { data: prospectosData } = await supabase.from('prospectos').select('*').order('fecha', { ascending: false });
+ 256 |       const { data: citasData } = await supabase.from('citas').select('*');
+ 257 |       const { data: equipoData } = await supabase.from('equipo').select('*');
+ 258 |       const { data: mensajesData } = await supabase.from('equipo_mensajes').select('*').order('creado_at', { ascending: true }).limit(100);
+ 259 | 
+ 260 |       if (clientesData) setClientes(clientesData);
+ 261 |       if (casosData) setCasos(casosData);
+ 262 |       if (prospectosData) setProspectos(prospectosData);
+ 263 |       if (citasData) setCitas(citasData);
+ 264 |       if (equipoData) setTeamMembers(equipoData);
+ 265 |       if (mensajesData) setEquipoMensajes(mensajesData);
+ 266 |       
+ 267 |       showToast('Sincronizaci├│n Premium Exitosa', 'success');
+ 268 |     } catch (error) {
+ 269 |       console.error('Error fetching data:', error);
+ 270 |       showToast('Error de conexi├│n con la nube', 'error');
+ 271 |     } finally {
+ 272 |       setIsSaving(false);
+ 273 |     }
+ 274 |   };
+ 275 | 
+ 276 |   // Cargar desde Supabase al inicio
+ 277 |   useEffect(() => {
+ 278 |     if (mounted) {
+ 279 |       fetchData();
+ 280 |     }
+ 281 |   }, [mounted]);
+ 282 |   
+ 283 |   const [realtimeStatus, setRealtimeStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
+ 284 | 
+ 285 |   // L├│gica de Almacenamiento (SUPABASE STORAGE)
+ 286 |   const handleUploadDocument = async (e: React.ChangeEvent<HTMLInputElement>, casoId: string) => {
+ 287 |     const file = e.target.files?.[0];
+ 288 |     if (!file || !casoId) return;
+ 289 | 
+ 290 |     setIsSaving(true);
+ 291 |     try {
+ 292 |       const fileExt = file.name.split('.').pop();
+ 293 |       const fileName = `${casoId}/${Math.random()}.${fileExt}`;
+ 294 |       const filePath = `${fileName}`;
+ 295 | 
+ 296 |       // 1. Subir a Storage
+ 297 |       const { error: uploadError } = await supabase.storage
+ 298 |         .from('documentos')
+ 299 |         .upload(filePath, file);
+ 300 | 
+ 301 |       if (uploadError) throw uploadError;
+ 302 | 
+ 303 |       // 2. Registrar en la BD
+ 304 |       const { error: dbError } = await supabase
+ 305 |         .from('documentos')
+ 306 |         .insert([{ 
+ 307 |           caso_id: casoId, 
+ 308 |           nombre: file.name, 
+ 309 |           tipo: fileExt || 'otro', 
+ 310 |           url: filePath,
+ 311 |           fecha: new Date().toISOString() 
+ 312 |         }]);
+ 313 | 
+ 314 |       if (dbError) throw dbError;
+ 315 | 
+ 316 |       showToast('Documento subido a la nube', 'success');
+ 317 |       fetchData(); // Recargar datos para ver el nuevo doc
+ 318 |     } catch (error) {
+ 319 |       console.error('Error uploading:', error);
+ 320 |       showToast('Error al subir documento', 'error');
+ 321 |     } finally {
+ 322 |       setIsSaving(false);
+ 323 |     }
+ 324 |   };
+ 325 |   const generatePortalLink = async (casoId: string) => {
+ 326 |     // Generar un token ├║nico (simulado)
+ 327 |     const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+ 328 |     const origin = typeof window !== 'undefined' ? window.location.origin : '';
+ 329 |     return `${origin}/portal/${token}`;
+ 330 |   };
+ 331 | 
+ 332 |   const handleSignDocument = async (casoId: string, docId: string, signatureData: string) => {
+ 333 |     try {
+ 334 |       setCasos(prev => prev.map(c => {
+ 335 |         if (c.id === casoId) {
+ 336 |           return {
+ 337 |             ...c,
+ 338 |             documentos: c.documentos.map((d: any) => 
+ 339 |               d.id === docId ? { ...d, firmado: true, firmaData: signatureData, fechaFirma: new Date().toISOString() } : d
+ 340 |             )
+ 341 |           };
+ 342 |         }
+ 343 |         return c;
+ 344 |       }));
+ 345 |       showToast('Documento firmado con ├®xito', 'success');
+ 346 |     } catch (err) {
+ 347 |        console.error('Error al firmar:', err);
+ 348 |     }
+ 349 |   };
+ 350 | 
+ 351 |   
+ 352 |   // Motor de Tiempo Real (SUPABASE REALTIME)
+ 353 |   useEffect(() => {
+ 354 |     if (!mounted) return;
+ 355 | 
+ 356 |     const channel = supabase
+ 357 |       .channel('despacho_delta')
+ 358 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'clientes' }, () => fetchData())
+ 359 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'casos' }, () => fetchData())
+ 360 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'prospectos' }, () => fetchData())
+ 361 |       .on('postgres_changes', { event: '*', schema: 'public', table: 'citas' }, () => fetchData())
+ 362 |       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'equipo_mensajes' }, (payload) => {
+ 363 |         setEquipoMensajes(prev => [...prev, payload.new]);
+ 364 |         // Alerta visual si no estamos en el chat
+ 365 |         if (activeTab !== 'teamChat') {
+ 366 |           addNotification({
+ 367 |             title: 'Mensaje de Equipo',
+ 368 |             message: payload.new.contenido,
+ 369 |             icon: '­ƒÆ¼',
+ 370 |             time: 'Ahora'
+ 371 |           });
+ 372 |         }
+ 373 |       })
+ 374 |       .subscribe((status) => {
+ 375 |         if (status === 'SUBSCRIBED') setRealtimeStatus('connected');
+ 376 |         if (status === 'CLOSED' || status === 'CHANNEL_ERROR') setRealtimeStatus('error');
+ 377 |       });
+ 378 | 
+ 379 |     return () => {
+ 380 |       supabase.removeChannel(channel);
+ 381 |     };
+ 382 |   }, [mounted]);
+ 383 | 
+ 384 |   // Mantener respaldo local (opcional)
+ 385 |   useEffect(() => {
+ 386 |     if (!mounted) return;
+ 387 |     localStorage.setItem('lexmex_clientes', JSON.stringify(clientes));
+ 388 |     localStorage.setItem('lexmex_casos', JSON.stringify(casos));
+ 389 |     localStorage.setItem('lexmex_prospectos', JSON.stringify(prospectos));
+ 390 |     localStorage.setItem('lexmex_citas', JSON.stringify(citas));
+ 391 |   }, [clientes, casos, prospectos, citas, mounted]);
+ 392 |   
+ 393 |   const welcomeMessageEs = `┬íBienvenido a TuAbogadoIA! ÔÜû´©Å
+ 394 | 
+ 395 | Soy tu asistente legal de **Alta Fidelidad** especializado en el sistema jur├¡dico mexicano. Mi arquitectura me permite ofrecerte:
+ 396 | 
+ 397 | ­ƒôï **An├ílisis y Dictaminaci├│n**
+ 398 | Revisi├│n t├®cnica de contratos, demandas y amparos con detecci├│n de riesgos procesales.
+ 399 | 
+ 400 | ­ƒôÜ **Investigaci├│n Jur├¡dica Din├ímica**
+ 401 | B├║squeda en tiempo real de Leyes Federales, Locales y Criterios Jurisprudenciales actualizados.
+ 402 | 
+ 403 | ­ƒÅó **Centro de Control Jur├¡dico**
+ 404 | Gesti├│n integrada de tu despacho: **Casos (${casos.length})**, **Prospectos (${prospectos.length})** y **Citas (${citas.length})** pendientes.
+ 405 | 
+ 406 | **┬┐Qu├® asunto legal revisamos hoy, Licenciado?**`;
+ 407 | 
+ 408 |   const welcomeMessageEn = `Welcome to TuAbogadoIA! ÔÜû´©Å
+ 409 | 
+ 410 | I am your legal AI assistant specialized in Mexican law. I am capable of:
+ 411 | 
+ 412 | ­ƒôï **Document Analysis**
+ 413 | I analyze lawsuits, responses, motions, and court rulings.
+ 414 | 
+ 415 | Ô£ì´©Å **Legal Drafting**
+ 416 | I prepare lawsuit responses, appeals, briefs, and legal documents.
+ 417 | 
+ 418 | ÔÜû´©Å **Ruling Analysis**
+ 419 | I examine sentences to find legal errors and appeal opportunities.
+ 420 | 
+ 421 | ­ƒôÜ **Precedent Search**
+ 422 | I locate relevant case law and theses.
+ 423 | 
+ 424 | ­ƒöì **Notarial Review**
+ 425 | I review deed projects and perform Due Diligence.
+ 426 | 
+ 427 | ­ƒô£ **Civil and Commercial Contracts**
+ 428 | I draft any type of contract.
+ 429 | 
+ 430 | ­ƒÆí You can also paste URLs from official sources (DOF, SCJN, etc.) for analysis.
+ 431 | 
+ 432 | How can I help you today?`;
+ 433 | 
+ 434 |   const [messages, setMessages] = useState<Message[]>([
+ 435 |     { role: 'assistant', content: welcomeMessageEs }
+ 436 |   ]);
+ 437 | 
+ 438 |   useEffect(() => {
+ 439 |     if (messages.length === 1 && messages[0].role === 'assistant') {
+ 440 |       setMessages([{ role: 'assistant', content: language === 'es' ? welcomeMessageEs : welcomeMessageEn }]);
+ 441 |     }
+ 442 |   }, [language]);
+ 443 |   const [input, setInput] = useState('');
+ 444 |   const [isLoading, setIsLoading] = useState(false);
+ 445 |   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+ 446 |   const [isRecording, setIsRecording] = useState(false);
+ 447 |   const [useWebSearch, setUseWebSearch] = useState(false);
+ 448 |   const [ocrResult, setOcrResult] = useState<any>(null);
+ 449 |   const [isAnalyzing, setIsAnalyzing] = useState(false);
+ 450 |   const [isSearchingWeb, setIsSearchingWeb] = useState(false);
+ 451 |   const [analysisResult, setAnalysisResult] = useState<any>(null);
+ 452 |   const [showAnalysis, setShowAnalysis] = useState(false);
+ 453 |   const [showOcr, setShowOcr] = useState(false);
+ 454 |   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | null>(null);
+ 455 |   const [equipoMensajes, setEquipoMensajes] = useState<any[]>([]);
+ 456 |   const [notifications, setNotifications] = useState<any[]>([]);
+ 457 |   const [showNotifications, setShowNotifications] = useState(false);
+ 458 |   const [searchTerm, setSearchTerm] = useState('');
+ 459 |   const [materiaFilter, setMateriaFilter] = useState('');
+     :                         ^^^^^^^^|^^^^^^^
+     :                                 `-- `setMateriaFilter` redefined here
+ 460 |   const [selectedLey, setSelectedLey] = useState<Ley | null>(null);
+ 461 |   const [selectedArticulo, setSelectedArticulo] = useState<Articulo | null>(null);
+ 461 |   const [selectedJurisprudencia, setSelectedJurisprudencia] = useState<Jurisprudencia | null>(null);
+     `----
+
+Import trace for requested module:
+./app/page.tsx
+
+
+> Build failed because of webpack errors

@@ -1,0 +1,74 @@
+  Ôû▓ Next.js 14.2.15
+  - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+Failed to compile.
+
+app\layout.tsx
+An error occurred in `next/font`.
+
+Error: Cannot find module '@tailwindcss/postcss'
+Require stack:
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\index.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\index.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack-config.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack-build\impl.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\compiled\jest-worker\processChild.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1456:15)
+    at C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\server\require-hook.js:55:36
+    at require.resolve (node:internal/modules/helpers:163:19)
+    at loadPlugin (C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js:49:32)
+    at C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js:157:56
+    at Array.map (<anonymous>)
+    at getPostCssPlugins (C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js:157:47)
+    at async C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\index.js:124:36
+    at async C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\loaders\next-font-loader\index.js:86:33
+    at async Span.traceAsyncFn (C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\trace\trace.js:154:20)
+
+app\layout.tsx
+An error occurred in `next/font`.
+
+Error: Cannot find module '@tailwindcss/postcss'
+Require stack:
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\index.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\index.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack-config.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack-build\impl.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\compiled\jest-worker\processChild.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1456:15)
+    at C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\server\require-hook.js:55:36
+    at require.resolve (node:internal/modules/helpers:163:19)
+    at loadPlugin (C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js:49:32)
+    at C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js:157:56
+    at Array.map (<anonymous>)
+    at getPostCssPlugins (C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js:157:47)
+    at async C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\index.js:124:36
+    at async C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\loaders\next-font-loader\index.js:86:33
+    at async Span.traceAsyncFn (C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\trace\trace.js:154:20)
+
+app\layout.tsx
+An error occurred in `next/font`.
+
+Error: Cannot find module '@tailwindcss/postcss'
+Require stack:
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\index.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\index.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack-config.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack-build\impl.js
+- C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\compiled\jest-worker\processChild.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1456:15)
+    at C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\server\require-hook.js:55:36
+    at require.resolve (node:internal/modules/helpers:163:19)
+    at loadPlugin (C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js:49:32)
+    at C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js:157:56
+    at Array.map (<anonymous>)
+    at getPostCssPlugins (C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\plugins.js:157:47)
+    at async C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\config\blocks\css\index.js:124:36
+    at async C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\build\webpack\loaders\next-font-loader\index.js:86:33
+    at async Span.traceAsyncFn (C:\Users\cp_an\OneDrive\Escritorio\PROYECTOS IA\LEXMEX IA\node_modules\next\dist\trace\trace.js:154:20)
+
+
+> Build failed because of webpack errors

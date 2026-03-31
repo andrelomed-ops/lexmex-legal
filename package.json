@@ -1,5 +1,5 @@
 {
-  "name": "lexmex",
+  "name": "tuabogadoia",
   "version": "1.0.0",
   "description": "Asesor Legal Inteligente - Derecho Mexicano",
   "scripts": {
@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.100.1",
     "docx": "^9.6.0",
     "file-saver": "^2.0.5",
     "jspdf": "^4.2.0",

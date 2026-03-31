@@ -9,8 +9,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Query is required' }, { status: 400 });
     }
 
-    // Using DuckDuckGo HTML scraping for legal/mexican results
-    const searchQuery = encodeURIComponent(`${query} México ley jurisprudencia`);
+    // Usar DuckDuckGo con operadores de sitio para priorizar fuentes legales mexicanas de alta confianza
+    const legalBooster = "(site:dof.gob.mx OR site:scjn.gob.mx OR site:ordenjuridico.gob.mx OR site:diputados.gob.mx)";
+    const searchQuery = encodeURIComponent(`${query} ${legalBooster}`);
     const url = `https://html.duckduckgo.com/html/?q=${searchQuery}`;
     
     const response = await fetch(url, {

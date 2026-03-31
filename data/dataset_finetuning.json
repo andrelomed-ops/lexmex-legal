@@ -105,6 +105,6 @@
     "version": "1.0",
     "fecha_creacion": "2026-02-25",
     "total_ejemplos": 20,
-    "notas": "Dataset para fine-tuning de LexMex. Incluye ejemplos de conversaciones ideales con la IA."
+    "notas": "Dataset para fine-tuning de TuAbogadoIA. Incluye ejemplos de conversaciones ideales con la IA."
   }
 }

@@ -17,6 +17,28 @@ export default function LegalLibrary({
   const [selectedLey, setSelectedLey] = useState<Ley | null>(null);
   const [selectedArticulo, setSelectedArticulo] = useState<Articulo | null>(null);
   const [selectedJurisprudencia, setSelectedJurisprudencia] = useState<Jurisprudencia | null>(null);
+  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
+  const [isExplaining, setIsExplaining] = useState(false);
+
+  const getAiExplanation = async (text: string) => {
+    setIsExplaining(true);
+    setAiExplanation(null);
+    try {
+      const response = await fetch('/api/explain', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      const data = await response.json();
+      if (data.explanation) {
+        setAiExplanation(data.explanation);
+      }
+    } catch (error) {
+      console.error('Error getting AI explanation:', error);
+    } finally {
+      setIsExplaining(false);
+    }
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 160px)' }}>
@@ -178,8 +200,28 @@ export default function LegalLibrary({
                 <div style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
                   {selectedArticulo ? (
                     <article>
-                      <h2 style={{ fontSize: '24px', color: '#fff', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <span style={{ color: 'var(--primary)' }}>§</span> Artículo {selectedArticulo.numero}
+                      <h2 style={{ fontSize: '24px', color: '#fff', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <span style={{ color: 'var(--primary)' }}>§</span> Artículo {selectedArticulo.numero}
+                        </div>
+                        <button 
+                          onClick={() => getAiExplanation(selectedArticulo.contenido)}
+                          style={{ 
+                            fontSize: '11px', 
+                            padding: '8px 16px', 
+                            background: 'rgba(197, 160, 89, 0.15)', 
+                            border: '1.5px solid var(--primary)', 
+                            borderRadius: '12px', 
+                            color: 'var(--primary)', 
+                            fontWeight: 700, 
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                          }}
+                        >
+                          ✨ EXPLICAR CON IA
+                        </button>
                       </h2>
                       <div style={{ 
                         lineHeight: 1.8, 
@@ -253,7 +295,25 @@ export default function LegalLibrary({
                 overflowY: 'auto',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
               }}>
-                <h2 style={{ fontSize: '20px', marginBottom: '24px', color: '#fff', lineHeight: 1.4 }}>{selectedJurisprudencia.titulo}</h2>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '24px', gap: '20px' }}>
+                  <h2 style={{ fontSize: '20px', margin: 0, color: '#fff', lineHeight: 1.4, flex: 1 }}>{selectedJurisprudencia.titulo}</h2>
+                  <button 
+                    onClick={() => getAiExplanation(selectedJurisprudencia.tesis)}
+                    style={{ 
+                      fontSize: '11px', 
+                      padding: '8px 16px', 
+                      background: 'rgba(197, 160, 89, 0.15)', 
+                      border: '1.5px solid var(--primary)', 
+                      borderRadius: '12px', 
+                      color: 'var(--primary)', 
+                      fontWeight: 700, 
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    ✨ EXPLICAR CON IA
+                  </button>
+                </div>
                 <div style={{ marginBottom: '24px' }}>
                   <h4 style={{ fontSize: '11px', color: 'var(--primary)', marginBottom: '12px', letterSpacing: '0.1em', fontWeight: 700 }}>TESIS</h4>
                   <div style={{ 
@@ -321,6 +381,50 @@ export default function LegalLibrary({
           </div>
         )}
       </div>
+      {/* AI Explanation Modal/Overlay */}
+      {(isExplaining || aiExplanation) && (
+        <div className="glass-panel animate-fade" style={{ 
+          position: 'fixed', 
+          top: '50%', 
+          left: '50%', 
+          transform: 'translate(-50%, -50%)',
+          width: '90%',
+          maxWidth: '500px',
+          zIndex: 3000,
+          padding: '32px',
+          boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
+          border: '1.5px solid var(--primary)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h3 style={{ margin: 0, color: 'var(--primary)', fontSize: '18px', fontWeight: 700 }}>✨ Claridad Legal IA</h3>
+            <button onClick={() => { setAiExplanation(null); setIsExplaining(false); }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '18px' }}>✕</button>
+          </div>
+          
+          {isExplaining ? (
+            <div style={{ textAlign: 'center', padding: '40px' }}>
+              <div className="shimmer" style={{ width: '100%', height: '20px', marginBottom: '12px', borderRadius: '4px' }} />
+              <div className="shimmer" style={{ width: '80%', height: '20px', marginBottom: '12px', borderRadius: '4px' }} />
+              <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>TuAbogadoIA está sintetizando el lenguaje legal...</p>
+            </div>
+          ) : (
+            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              <p style={{ fontSize: '15px', lineHeight: '1.8', color: '#fff', whiteSpace: 'pre-wrap' }}>{aiExplanation}</p>
+              <div style={{ marginTop: '24px', padding: '16px', background: 'rgba(197, 162, 39, 0.05)', borderRadius: '12px', border: '1px solid rgba(197, 162, 39, 0.1)' }}>
+                <p style={{ margin: 0, fontSize: '12px', color: 'var(--primary)', fontWeight: 700 }}>💡 NOTA TUABOGADOIA</p>
+                <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>Esta explicación es una simplificación asistida por IA para fines informativos.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Background Overlay for Modal */}
+      {(isExplaining || aiExplanation) && (
+        <div 
+          onClick={() => { setAiExplanation(null); setIsExplaining(false); }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 2999 }}
+        />
+      )}
     </div>
   );
 }
