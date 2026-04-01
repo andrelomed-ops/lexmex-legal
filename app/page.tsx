@@ -13,6 +13,7 @@ interface Message {
 
 
 
+import { useAppStore } from '@/store/useAppStore';
 import PlantillasView from '@/components/PlantillasView';
 import ProspectosView from '@/components/ProspectosView';
 import CitasView from '@/components/CitasView';
@@ -81,38 +82,20 @@ export default function Home() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const [activeTab, setActiveTab] = useState<'chat' | 'library' | 'jurisprudencia' | 'escrituras' | 'casos' | 'plantillas' | 'calendario' | 'reportes' | 'prospectos' | 'citas' | 'equipo' | 'teamChat' | 'tratados' | 'suscripcion' | 'profile'>('chat');
-  const [subscriptionLevel, setSubscriptionLevel] = useState<'free' | 'pro' | 'enterprise'>('free');
-  const [premiumUsage, setPremiumUsage] = useState(0);
+  const {
+    clientes, setClientes,
+    casos, setCasos,
+    prospectos, setProspectos,
+    citas, setCitas,
+    teamMembers, setTeamMembers,
+    notifications, addNotification,
+    subscriptionLevel, setSubscription,
+    premiumUsage, incPremiumUsage,
+    theme, toggleTheme,
+    language, setLanguage
+  } = useAppStore();
+
   const [mounted, setMounted] = useState(false);
-  
-  // Estado para casos
-  const [clientes, setClientes] = useState<any[]>([]);
-  const [casos, setCasos] = useState<any[]>([]);
-  const [selectedCliente, setSelectedCliente] = useState<any>(null);
-  const [selectedCaso, setSelectedCaso] = useState<any>(null);
-  const [showNewCliente, setShowNewCliente] = useState(false);
-  const [showNewCaso, setShowNewCaso] = useState(false);
-  const [showNewPlazo, setShowNewPlazo] = useState(false);
-  const [showNewEvento, setShowNewEvento] = useState(false);
-  const [showNewDocumento, setShowNewDocumento] = useState(false);
-  const [showNewConsulta, setShowNewConsulta] = useState(false);
-  const [showNewFactura, setShowNewFactura] = useState(false);
-  const [showContractAnalysis, setShowContractAnalysis] = useState(false);
-  const [contractText, setContractText] = useState('');
-  const [contractType, setContractType] = useState('general');
-  const [showNewProspecto, setShowNewProspecto] = useState(false);
-  const [prospectos, setProspectos] = useState<any[]>([]);
-  const [citas, setCitas] = useState<any[]>([]);
-  const [showNewCita, setShowNewCita] = useState(false);
-  const [showNewTeamMember, setShowNewTeamMember] = useState(false);
-  const [teamMembers, setTeamMembers] = useState<any[]>([]);
-  const [showTeamTab, setShowTeamTab] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [language, setLanguage] = useState<'es' | 'en'>('es');
 
   const translations = {
     es: {
@@ -172,13 +155,34 @@ export default function Home() {
   const [activeSubTab, setActiveSubTab] = useState<'leyes' | 'jurisprudencia' | 'doctrina'>('leyes');
 
   // Helpers de Notificación
-  const addNotification = (notif: any) => {
-    setNotifications(prev => [notif, ...prev].slice(0, 20));
+  const onAddNotification = (notif: any) => {
+    addNotification(notif);
     // Push Notification si hay permiso
     if (Notification.permission === 'granted') {
       new Notification(notif.title, { body: notif.message, icon: '/favicon.ico' });
     }
   };
+
+  const [activeTab, setActiveTab] = useState<'chat' | 'library' | 'jurisprudencia' | 'escrituras' | 'casos' | 'plantillas' | 'calendario' | 'reportes' | 'prospectos' | 'citas' | 'equipo' | 'teamChat' | 'tratados' | 'suscripcion' | 'profile'>('chat');
+  const [selectedCliente, setSelectedCliente] = useState<any>(null);
+  const [selectedCaso, setSelectedCaso] = useState<any>(null);
+  const [showNewCliente, setShowNewCliente] = useState(false);
+  const [showNewCaso, setShowNewCaso] = useState(false);
+  const [showNewPlazo, setShowNewPlazo] = useState(false);
+  const [showNewEvento, setShowNewEvento] = useState(false);
+  const [showNewDocumento, setShowNewDocumento] = useState(false);
+  const [showNewConsulta, setShowNewConsulta] = useState(false);
+  const [showNewFactura, setShowNewFactura] = useState(false);
+  const [showContractAnalysis, setShowContractAnalysis] = useState(false);
+  const [contractText, setContractText] = useState('');
+  const [contractType, setContractType] = useState('general');
+  const [showNewProspecto, setShowNewProspecto] = useState(false);
+  const [showNewCita, setShowNewCita] = useState(false);
+  const [showNewTeamMember, setShowNewTeamMember] = useState(false);
+  const [showTeamTab, setShowTeamTab] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   // Monitor de Vencimientos (Deadline Sentry)
   useEffect(() => {
@@ -188,7 +192,7 @@ export default function Home() {
     const urgentes = proximos.filter((p: any) => p.dias <= 3);
     
     if (urgentes.length > 0) {
-      addNotification({
+      onAddNotification({
         title: '⚠️ Vencimientos Urgentes',
         message: `Tienes ${urgentes.length} plazos legales que vencen en menos de 72 horas.`,
         isUrgent: true,
@@ -351,17 +355,18 @@ export default function Home() {
 
   const handleSignDocument = async (casoId: string, docId: string, signatureData: string) => {
     try {
-      setCasos(prev => prev.map(c => {
-        if (c.id === casoId) {
-          return {
-            ...c,
-            documentos: c.documentos.map((d: any) => 
-              d.id === docId ? { ...d, firmado: true, firmaData: signatureData, fechaFirma: new Date().toISOString() } : d
-            )
-          };
-        }
-        return c;
-      }));
+    const updatedCasos = casos.map(c => {
+      if (c.id === casoId) {
+        return {
+          ...c,
+          documentos: c.documentos.map((d: any) => 
+            d.id === docId ? { ...d, firmado: true, firmaData: signatureData, fechaFirma: new Date().toISOString() } : d
+          )
+        };
+      }
+      return c;
+    });
+    setCasos(updatedCasos);
       showToast('Documento firmado con éxito', 'success');
     } catch (err) {
        console.error('Error al firmar:', err);
@@ -401,14 +406,10 @@ export default function Home() {
     };
   }, [mounted]);
 
-  // Mantener respaldo local (opcional)
+  // El almacenamiento ahora se maneja automáticamente por Zustand Persist!
   useEffect(() => {
     if (!mounted) return;
-    localStorage.setItem('tuabogadoia_clientes', JSON.stringify(clientes));
-    localStorage.setItem('tuabogadoia_casos', JSON.stringify(casos));
-    localStorage.setItem('tuabogadoia_prospectos', JSON.stringify(prospectos));
-    localStorage.setItem('tuabogadoia_citas', JSON.stringify(citas));
-  }, [clientes, casos, prospectos, citas, mounted]);
+  }, [mounted]);
   
   const welcomeMessageEs = `¡Bienvenido a TuAbogadoIA! ⚖️
 
@@ -473,7 +474,6 @@ How can I help you today?`;
   const [showOcr, setShowOcr] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | null>(null);
   const [equipoMensajes, setEquipoMensajes] = useState<any[]>([]);
-  const [notifications, setNotifications] = useState<any[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [materiaFilter, setMateriaFilter] = useState('');
@@ -632,7 +632,7 @@ How can I help you today?`;
   const checkPremiumAccess = (feature: string) => {
     if (subscriptionLevel !== 'free') return true;
     if (premiumUsage < 3) {
-      setPremiumUsage(prev => prev + 1);
+      incPremiumUsage();
       return true;
     }
     setActiveTab('suscripcion');
@@ -1318,9 +1318,9 @@ How can I help you today?`;
     e.target.value = '';
   };
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
+  const handleToggleTheme = () => {
+    toggleTheme();
+    const newTheme = theme === 'dark' ? 'light' : 'dark'; // The value hasn't updated yet in the current render
     document.documentElement.style.setProperty('--bg', newTheme === 'dark' ? '#0D1117' : '#f5f5f5');
     document.documentElement.style.setProperty('--surface', newTheme === 'dark' ? '#161b22' : '#ffffff');
     document.documentElement.style.setProperty('--surface-hover', newTheme === 'dark' ? '#21262d' : '#e6e6e6');
@@ -1985,7 +1985,7 @@ How can I help you today?`;
                   <SuscripcionView 
                     currentLevel={subscriptionLevel} 
                     onUpgrade={(level) => {
-                      setSubscriptionLevel(level);
+                      setSubscription(level);
                       showToast(`¡Bienvenido al nivel ${level.toUpperCase()}!`, 'success');
                       setActiveTab('chat');
                     }} 
@@ -1994,7 +1994,7 @@ How can I help you today?`;
                 {activeTab === 'profile' && (
                   <ProfileView 
                     onSave={(updatedProfile: any) => {
-                      setSubscriptionLevel(updatedProfile.suscripcion);
+                      setSubscription(updatedProfile.suscripcion);
                     }} 
                     showToast={showToast}
                   />
